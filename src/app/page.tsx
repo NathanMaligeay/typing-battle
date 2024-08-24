@@ -16,12 +16,25 @@ export default function Main() {
   //const [keystroke, setKeystroke] = useState<string | null>(null);
   const [meteors, setMeteors] = useState<{ id: string }[]>([]);
 
+  const removeMeteorite = (event: React.AnimationEvent<HTMLImageElement>) => {
+    const meteorId = event.currentTarget.id;
+    setMeteors(prevMeteors =>
+      prevMeteors.filter(meteor => meteor.id !== meteorId)
+    );
+    console.log(`Animation ended for meteor with ID: ${meteorId}`);
+  };
+
   const togglePlaying = () => {
     setPlay(!play)
   }
 
   useEffect(() => {
+    if (meteors.length < 1) {
+      setMeteors([{ id: Math.random().toString(36).substr(2, 9) }]);
+    }
+  }, []);
 
+  useEffect(() => {
     let intervalMeteor: NodeJS.Timeout | null = null;
     intervalMeteor = setInterval(() => {
       const addMeteor = Math.floor(Math.random() * 10);
@@ -31,11 +44,10 @@ export default function Main() {
           { id: Math.random().toString(36).substr(2, 9) }
         ]);
       }
-    }, 500);
+    }, 5000);
 
     return () => {
       clearInterval(intervalMeteor);
-      //setMeteors([]); 
     };
 
   }, []);
@@ -85,11 +97,10 @@ export default function Main() {
           <Word key={index} text={word.text} x={word.x} y={word.y} showWord={true} />
         ))}
         {meteors.map((meteor) => (
-          <Meteor key={meteor.id} />
+          <Meteor key={meteor.id} deleteMeteorite={removeMeteorite} meteorId={meteor.id} />
         ))}
       </div>
       <PlayButton isPlaying={play} onClickFunction={togglePlaying} />
     </div>
-
   )
 }

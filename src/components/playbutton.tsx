@@ -5,13 +5,7 @@ interface PlayButtonProps {
     onClickFunction: () => void;
 }
 
-const PlayButton: React.FC<PlayButtonProps> = ({ isPlaying, onClickFunction }) => {
-    if (isPlaying) {
-        return <button onClick={onClickFunction}>Stop game</button>;
-    }
-    else {
-        return <button onClick={onClickFunction}>Start game</button>;
-    }
-}
+const PlayButton: React.FC<PlayButtonProps> = ({ isPlaying, onClickFunction }) => 
+    <button onClick={onClickFunction}>{isPlaying ? "Stop game" : "Start game"}</button>;
 
 export default PlayButton;
