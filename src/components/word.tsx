@@ -4,15 +4,16 @@ interface WordProps {
     text: string;
     x: number;
     y: number;
-    //keystroke: string;
+    // keystroke: string;
     showWord: boolean;
+    onPositionUpdate: (x: number, y: number) => void;
 }
 
 interface WordState {
     wordText: string;
     x_pos: number;
     y_pos: number;
-    //textTyped: string;
+    // textTyped: string;
     isVisible: boolean;
 }
 
@@ -25,7 +26,7 @@ class Word extends React.Component<WordProps, WordState> {
             wordText: props.text,
             x_pos: props.x,
             y_pos: props.y,
-            //textTyped: props.keystroke,
+            // textTyped: props.keystroke,
             isVisible: props.showWord
         };
     }
@@ -34,7 +35,8 @@ class Word extends React.Component<WordProps, WordState> {
         // Start the animation when the component mounts
         this.intervalId = setInterval(() => {
             this.setState((prevState) => {
-                const newYPos = prevState.y_pos + 1;
+                const speed=Math.random()
+                const newYPos = prevState.y_pos + (speed * (2/ this.state.wordText.length));
 
                 // Check if the word has reached the bottom
                 if (newYPos >= 780) {
@@ -44,6 +46,9 @@ class Word extends React.Component<WordProps, WordState> {
                         isVisible: false // Hide the word by setting isVisible to false
                     };
                 }
+
+                this.props.onPositionUpdate(this.state.x_pos, newYPos);
+
 
                 return {
                     y_pos: newYPos, // Continue moving the word down

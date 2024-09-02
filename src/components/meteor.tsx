@@ -113,7 +113,6 @@ const Meteor: React.FC<MeteorProps> = ({meteorId, deleteMeteorite}) => {
     }, );
 
     const meteorStyle = useMemo(createMeteorStyle, []);
-    console.log('Meteor Style:', meteorStyle);
 
 
     return (
