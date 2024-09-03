@@ -1,31 +1,28 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Word from '@/components/word';
 import Meteor from '@/components/meteor';
 import FillableWord from '@/components/fillableword';
-import { useWords } from '@/hooks/useWords';
+import { useWords, Word as WordType } from '@/hooks/useWords';
 import { useMeteors } from '@/hooks/useMeteors';
 import { useKeyboardInput } from '@/hooks/useKeyboardInput';
 import "../styles/main.css";
 
 const Main: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const { words, removeWord, updateWordPosition } = useWords(isPlaying);
+  const { words, highlightedWord, removeWord, updateWordPosition } = useWords(isPlaying);
   const { meteors, removeMeteor } = useMeteors();
   const { textTyped, resetTextTyped } = useKeyboardInput(isPlaying);
 
   const togglePlaying = () => setIsPlaying(prev => !prev);
 
-  const lowestWord = words.reduce((lowest, word) => 
-    word.y > lowest.y ? word : lowest, words[0] || { y: 0 });
-
   useEffect(() => {
-    if (lowestWord && textTyped === lowestWord.text) {
-      removeWord(lowestWord.id);
+    if (highlightedWord && textTyped === highlightedWord.text) {
+      removeWord(highlightedWord.id);
       resetTextTyped();
     }
-  }, [textTyped, lowestWord, removeWord, resetTextTyped]);
+  }, [textTyped, highlightedWord, removeWord, resetTextTyped]);
 
   return (
     <div>
@@ -34,7 +31,7 @@ const Main: React.FC = () => {
           <Word
             key={word.id}
             {...word}
-            isHighlighted={word === lowestWord}
+            isHighlighted={word.id === highlightedWord?.id}
             onPositionUpdate={updateWordPosition}
             onReachBottom={removeWord}
           />
@@ -51,7 +48,7 @@ const Main: React.FC = () => {
       <button onClick={togglePlaying}>
         {isPlaying ? "Stop game" : "Start game"}
       </button>
-      <FillableWord text={'this is a test'} color={'green'} percentage={80}/>
+      <FillableWord text={'this is a test'} color={'green'} percentage={80} />
     </div>
   );
 };

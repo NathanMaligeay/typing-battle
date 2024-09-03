@@ -13,10 +13,20 @@ export interface Word {
 
 export const useWords = (isPlaying: boolean) => {
   const [words, setWords] = useState<Word[]>([]);
+  const [highlightedWord, setHighlightedWord] = useState<Word | null>(null);
 
   const addWord = useCallback(() => {
     setWords(prevWords => [...prevWords, createWord()]);
   }, []);
+
+  useEffect(() => {
+    const newHighlightedWord = words.reduce((lowest, word) => 
+      word.y > lowest.y ? word : lowest, words[0] || { y: 0 });
+
+    if (!highlightedWord || !words.find(word => word.id === highlightedWord.id)) {
+      setHighlightedWord(newHighlightedWord);
+    }
+  }, [words, highlightedWord]);
 
   useEffect(() => {
     if (!isPlaying) {
@@ -48,5 +58,5 @@ export const useWords = (isPlaying: boolean) => {
       word.id === id ? { ...word, y } : word
     ));
 
-  return { words, removeWord, updateWordPosition };
+  return { words, highlightedWord, removeWord, updateWordPosition };
 };
