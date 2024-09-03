@@ -5,10 +5,10 @@ import React, { useState, useEffect } from 'react';
 import Word from '@/components/word';
 import PlayButton from '@/components/playbutton';
 import Meteor from '@/components/meteor';
+import FillableWord from '@/components/fillableword';
 import "../styles/main.css";
 
-// const wordsArray = ["apple", "banana", "cherry", "date", "elderberry"]
-const wordsArray = ["thisisaveryveryslowword", "fast"]
+const wordsArray = ["thisisaveryslowword", "fast","iammedium"]
 
 
 export default function Main() {
@@ -18,6 +18,7 @@ export default function Main() {
   const [meteors, setMeteors] = useState<{ id: string }[]>([]);
   const [textTyped, setTextTyped] = useState<string>('');
   const [highlightedIndex, setHighlightedIndex] = useState<number>(0);
+  const [wordCompleted, setWordCompleted] = useState<boolean>(false);
 
 
   const removeMeteorite = (event: React.AnimationEvent<HTMLImageElement>) => {
@@ -33,7 +34,6 @@ export default function Main() {
 
   useEffect(() => {
     const checkPositions = () => {
-      // Find the word with the highest y value (lowest on screen)
       const lowestWordIndex = words.reduce((lowestIndex, word, index) => {
         return word.y > words[lowestIndex].y ? index : lowestIndex;
       }, 0);
@@ -41,17 +41,11 @@ export default function Main() {
       setHighlightedIndex(lowestWordIndex);
     };
 
-    // Check positions initially and on window resize
     checkPositions();
-    window.addEventListener('resize', checkPositions);
 
-    // Cleanup on component unmount
-    return () => {
-      window.removeEventListener('resize', checkPositions);
-    };
-  }, [words,highlightedIndex]); // Re-run effect if words change
+  }, [wordCompleted]);
 
-  console.log(words[highlightedIndex])
+
   
 
   useEffect(() => {
@@ -83,28 +77,17 @@ export default function Main() {
 
     if (play) {
 
-      ///Gestion des mots
-      // Make 1rst word appear when click on button
       const randomIndex = Math.floor(Math.random() * wordsArray.length);
       const newWord = wordsArray[randomIndex];
-
-      // Generate random position for the first word
       const newX = Math.floor(Math.random() * 750);
-
-      // Update state with the first word
       setWords(prevWords => [...prevWords, { text: newWord, x: newX, y: 0 }]);
 
       intervalWord = setInterval(() => {
         const randomIndex = Math.floor(Math.random() * wordsArray.length);
         const newWord = wordsArray[randomIndex];
-
-        // Generate random position for the new word
         const newX = Math.floor(Math.random() * 750);
-
-        // Update state with the new word
         setWords(prevWords => [...prevWords, { text: newWord, x: newX, y: 0 }]);
-      }, 2000); // Add a new word every 5 seconds
-
+      }, 5000);
     }
 
     return () => {
@@ -124,14 +107,7 @@ export default function Main() {
           updatedText = prev.slice(0,-1);
         }
         else {updatedText = prev + key;}
-        
-
-        //const matchIndex = words.findIndex((word) => updatedText.trim().toLowerCase() === word.text.toLowerCase());
-
-        if (updatedText == words[highlightedIndex].text) {
-          setWords((prevWords) => prevWords.filter((_, index) => index !== highlightedIndex));
-          return '';
-        }
+       
         return updatedText;
       });
     };
@@ -149,6 +125,26 @@ export default function Main() {
     };
   }, [play, words]);
 
+  useEffect(() => {
+    if (play) {
+      if (words.length > 0) {
+      console.log("the word highlighted should be " + words[highlightedIndex].text)
+      console.log(highlightedIndex)
+      // console.log(words[highlightedIndex].text)
+      if (textTyped == words[highlightedIndex].text) {
+        setWords((prevWords) => {
+          const newWords = prevWords.filter((_, index) => index !== highlightedIndex);
+          return newWords;
+        })
+        console.log(textTyped);
+        setTextTyped('');
+        setWordCompleted(true);
+        setWordCompleted(false);
+      }
+    }
+    }
+  }, [words,highlightedIndex])
+
   const handlePositionUpdate = (index: number, x: number, y: number) => {
     setWords(prevWords => {
       const updatedWords = [...prevWords];
@@ -161,7 +157,7 @@ export default function Main() {
     <div>
       <div className="playBox">
         {words.map((word, index) => (
-          <Word key={index} text={word.text} x={word.x} y={word.y} showWord={true} onPositionUpdate={(x, y) => handlePositionUpdate(index, x, y)}/>
+          <Word key={index} text={word.text} x={word.x} y={word.y} showWord={true} onPositionUpdate={(x, y) => handlePositionUpdate(index, x, y)} textColor={index === highlightedIndex ? 'red' : 'yellow'}/>
         ))}
         {meteors.map((meteor) => (
           <Meteor key={meteor.id} deleteMeteorite={removeMeteorite} meteorId={meteor.id} />
@@ -169,6 +165,7 @@ export default function Main() {
       </div>
       <p>{textTyped}</p>
       <PlayButton isPlaying={play} onClickFunction={togglePlaying} />
+      <FillableWord text={'this is a test'} color={'green'} percentage={80}/>
     </div>
   )
 

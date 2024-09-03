@@ -4,16 +4,15 @@ interface WordProps {
     text: string;
     x: number;
     y: number;
-    // keystroke: string;
     showWord: boolean;
     onPositionUpdate: (x: number, y: number) => void;
+    textColor : string;
 }
 
 interface WordState {
     wordText: string;
     x_pos: number;
     y_pos: number;
-    // textTyped: string;
     isVisible: boolean;
 }
 
@@ -26,13 +25,11 @@ class Word extends React.Component<WordProps, WordState> {
             wordText: props.text,
             x_pos: props.x,
             y_pos: props.y,
-            // textTyped: props.keystroke,
-            isVisible: props.showWord
+            isVisible: props.showWord,
         };
     }
 
     componentDidMount() {
-        // Start the animation when the component mounts
         this.intervalId = setInterval(() => {
             this.setState((prevState) => {
                 const speed=Math.random()
@@ -51,11 +48,11 @@ class Word extends React.Component<WordProps, WordState> {
 
 
                 return {
-                    y_pos: newYPos, // Continue moving the word down
+                    y_pos: newYPos,
                     isVisible: prevState.isVisible
                 };
             });
-        }, 10); // Update every 10ms
+        }, 10);
     }
 
     componentWillUnmount() {
@@ -76,7 +73,8 @@ class Word extends React.Component<WordProps, WordState> {
     };
 
     render(): React.ReactNode {
-        const { x_pos, y_pos, wordText } = this.state;
+        const { x_pos, y_pos, wordText, } = this.state;
+        const { textColor } = this.props;
 
         const style: React.CSSProperties = {
             position: 'absolute',
@@ -84,7 +82,7 @@ class Word extends React.Component<WordProps, WordState> {
             left: `${x_pos}px`,
             top: `${y_pos}px`,
             fontSize: '12px',
-            color: 'yellow'
+            color: textColor,
         };
 
         return this.state.isVisible ? <div style={style}>{wordText}</div> : null;
