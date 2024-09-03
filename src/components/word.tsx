@@ -1,92 +1,45 @@
-import React from "react";
+import React, { useEffect, useRef } from 'react';
 
 interface WordProps {
+    id: string;
     text: string;
     x: number;
     y: number;
-    showWord: boolean;
-    onPositionUpdate: (x: number, y: number) => void;
-    textColor : string;
+    isHighlighted: boolean;
+    onPositionUpdate: (id: string, y: number) => void;
+    onReachBottom: (id: string) => void;
 }
 
-interface WordState {
-    wordText: string;
-    x_pos: number;
-    y_pos: number;
-    isVisible: boolean;
-}
+const Word: React.FC<WordProps> = ({ id, text, x, y, isHighlighted, onPositionUpdate, onReachBottom }) => {
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-class Word extends React.Component<WordProps, WordState> {
-    private intervalId?: NodeJS.Timeout; // Store interval ID for clearing it later
+    useEffect(() => {
+        intervalRef.current = setInterval(() => {
+            const speed = Math.random() * (2 / text.length);
+            const newY = y + speed;
 
-    constructor(props: WordProps) {
-        super(props);
-        this.state = {
-            wordText: props.text,
-            x_pos: props.x,
-            y_pos: props.y,
-            isVisible: props.showWord,
-        };
-    }
-
-    componentDidMount() {
-        this.intervalId = setInterval(() => {
-            this.setState((prevState) => {
-                const speed=Math.random()
-                const newYPos = prevState.y_pos + (speed * (2/ this.state.wordText.length));
-
-                // Check if the word has reached the bottom
-                if (newYPos >= 780) {
-                    clearInterval(this.intervalId); // Stop the interval if the word reaches the bottom
-                    return {
-                        y_pos: newYPos,
-                        isVisible: false // Hide the word by setting isVisible to false
-                    };
-                }
-
-                this.props.onPositionUpdate(this.state.x_pos, newYPos);
-
-
-                return {
-                    y_pos: newYPos,
-                    isVisible: prevState.isVisible
-                };
-            });
+            if (newY >= 780) {
+                if (intervalRef.current) clearInterval(intervalRef.current);
+                onReachBottom(id);
+            } else {
+                onPositionUpdate(id, newY);
+            }
         }, 10);
-    }
 
-    componentWillUnmount() {
-        // Clear the interval when the component unmounts
-        if (this.intervalId) {
-            clearInterval(this.intervalId);
-        }
-    }
+        return () => {
+            if (intervalRef.current) clearInterval(intervalRef.current);
+        };
+    }, [id, text, y, onPositionUpdate, onReachBottom]);
 
-
-
-    toggleWord = () => {
-        if (this.state.y_pos === 390) {
-            this.setState((prevState) => ({
-                isVisible: !prevState.isVisible
-            }));
-        }
+    const style: React.CSSProperties = {
+        position: 'absolute',
+        left: `${x}px`,
+        top: `${y}px`,
+        fontSize: '12px',
+        color: isHighlighted ? 'red' : 'yellow',
     };
 
-    render(): React.ReactNode {
-        const { x_pos, y_pos, wordText, } = this.state;
-        const { textColor } = this.props;
+    return <div style={style}>{text}</div>;
+};
 
-        const style: React.CSSProperties = {
-            position: 'absolute',
-            margin: 'auto',
-            left: `${x_pos}px`,
-            top: `${y_pos}px`,
-            fontSize: '12px',
-            color: textColor,
-        };
-
-        return this.state.isVisible ? <div style={style}>{wordText}</div> : null;
-    }
-}
-
-export default Word;
+export default React.memo(Word);

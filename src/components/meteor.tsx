@@ -1,125 +1,82 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import "../styles/main.css";
 
-
 interface MeteorProps {
-    meteorId: string,
-    deleteMeteorite: (event: React.AnimationEvent<HTMLImageElement>) => void
+    meteorId: string;
+    onAnimationEnd: (id: string) => void;
 }
 
-const createMeteorStyle = (): React.CSSProperties => {
-
-    const randomWidth = Math.floor(Math.random() * 91) + 10;
-    const sideStart = Math.floor(Math.random() * 4);
-    const randomXStartPosition = Math.floor(Math.random() * 100);
-    const randomXEndPosition = Math.floor(Math.random() * 100);
-    const randomYStartPosition = Math.floor(Math.random() * 100);
-    const randomYEndPosition = Math.floor(Math.random() * 100);
-    const randomRotationStart = Math.floor(Math.random() * 360); // Random starting rotation
-    const randomRotationEnd = Math.floor(Math.random() * 360); // Random ending rotation
-    const animationDuration = Math.pow(Math.log2(randomWidth),2)/1.5 //plus la météorite est grosse, plus je veux qu'elle se déplace lentement
-
-    const animationName = `moveMeteor-${Math.random().toString(36).substr(2, 9)}`;
-    let keyframes = '';
-
+const generateKeyframes = (sideStart: number, meteorId: string, randomYStartPosition: number, randomYEndPosition: number, randomXStartPosition: number, randomXEndPosition: number, randomRotationStart: number, randomRotationEnd: number) => {
+    const animationName = `moveMeteor-${meteorId}`;
     switch (sideStart) {
         case 0:
-            keyframes = `
- @keyframes ${animationName} {
-     0% {
-         left: -10%;
-         top: ${randomYStartPosition}%;
-         transform: rotate(${randomRotationStart}deg);
-     }
-     100% {
-         left: 110%;
-         top: ${randomYEndPosition}%;
-         transform: rotate(${randomRotationEnd}deg);
-     }
- }
-`;
-            break;
+            return `
+                @keyframes ${animationName} {
+                    0% { left: -10%; top: ${randomYStartPosition}%; transform: rotate(${randomRotationStart}deg); }
+                    100% { left: 110%; top: ${randomYEndPosition}%; transform: rotate(${randomRotationEnd}deg); }
+                }
+            `;
         case 1:
-            keyframes = `
-        @keyframes ${animationName} {
-            0% {
-                right: -10%;
-                top: ${randomYStartPosition}%;
-                transform: rotate(${randomRotationStart}deg);
-            }
-            100% {
-                right: 110%;
-                top: ${randomYEndPosition}%;
-                transform: rotate(${randomRotationEnd}deg);
-            }
-        }
-    `;
-            break;
+            return `
+                @keyframes ${animationName} {
+                    0% { right: -10%; top: ${randomYStartPosition}%; transform: rotate(${randomRotationStart}deg); }
+                    100% { right: 110%; top: ${randomYEndPosition}%; transform: rotate(${randomRotationEnd}deg); }
+                }
+            `;
         case 2:
-            keyframes = `
-        @keyframes ${animationName} {
-            0% {
-                left: ${randomXStartPosition}%;
-                top: -10%;
-                transform: rotate(${randomRotationStart}deg);
-            }
-            100% {
-                left: ${randomXEndPosition}%;
-                top: 110%;
-                transform: rotate(${randomRotationEnd}deg);
-            }
-        }
-    `;
-            break;
+            return `
+                @keyframes ${animationName} {
+                    0% { left: ${randomXStartPosition}%; top: -10%; transform: rotate(${randomRotationStart}deg); }
+                    100% { left: ${randomXEndPosition}%; top: 110%; transform: rotate(${randomRotationEnd}deg); }
+                }
+            `;
         case 3:
-            keyframes = `
- @keyframes ${animationName} {
-     0% {
-         left: ${randomXStartPosition}%;
-         bottom: -10%;
-         transform: rotate(${randomRotationStart}deg);
-     }
-     100% {
-         left: ${randomXEndPosition}%;
-         bottom: 110%;
-         transform: rotate(${randomRotationEnd}deg);
-     }
- }
-`;
-            break;
+            return `
+                @keyframes ${animationName} {
+                    0% { left: ${randomXStartPosition}%; bottom: -10%; transform: rotate(${randomRotationStart}deg); }
+                    100% { left: ${randomXEndPosition}%; bottom: 110%; transform: rotate(${randomRotationEnd}deg); }
+                }
+            `;
+        default:
+            return '';
     }
-
-    // Ensure the keyframes are properly appended
-    const styleSheet = document.head.querySelector('style') || document.createElement('style');
-    if (!document.head.querySelector('style')) {
-        document.head.appendChild(styleSheet);
-    }
-    styleSheet.sheet?.insertRule(keyframes, styleSheet.sheet.cssRules.length);
-
-    return {
-        width: `${randomWidth}px`,
-        animation: `${animationName} ${animationDuration}s linear 1`,
-    };
 };
 
-const Meteor: React.FC<MeteorProps> = ({meteorId, deleteMeteorite}) => {
+const Meteor: React.FC<MeteorProps> = ({ meteorId, onAnimationEnd }) => {
+    const meteorStyle = useMemo(() => {
+        const randomWidth = Math.floor(Math.random() * 91) + 10;
+        const sideStart = Math.floor(Math.random() * 4);
+        const randomXStartPosition = Math.floor(Math.random() * 100);
+        const randomXEndPosition = Math.floor(Math.random() * 100);
+        const randomYStartPosition = Math.floor(Math.random() * 100);
+        const randomYEndPosition = Math.floor(Math.random() * 100);
+        const randomRotationStart = Math.floor(Math.random() * 360);
+        const randomRotationEnd = Math.floor(Math.random() * 360);
+        const animationDuration = Math.pow(Math.log2(randomWidth), 2) / 1.5;
 
-    useEffect(() => {
-        const style = document.createElement('style');
-        document.head.appendChild(style);
-        return () => {
-            document.head.removeChild(style);
+        const keyframes = generateKeyframes(sideStart, meteorId, randomYStartPosition, randomYEndPosition, randomXStartPosition, randomXEndPosition, randomRotationStart, randomRotationEnd);
+
+        const styleElement = document.createElement('style');
+        styleElement.innerHTML = keyframes;
+        document.head.appendChild(styleElement);
+
+        return {
+            width: `${randomWidth}px`,
+            animation: `moveMeteor-${meteorId} ${animationDuration}s linear 1`,
         };
-    }, );
-
-    const meteorStyle = useMemo(createMeteorStyle, []);
-
+    }, [meteorId]);
 
     return (
         <div className="meteor-container">
-            <img key={meteorId} id={meteorId} src="meteor.png" className="meteor" alt="Meteor" style={meteorStyle} onAnimationEnd={deleteMeteorite} />
+            <img
+                src="meteor.png"
+                className="meteor"
+                alt="Meteor"
+                style={meteorStyle}
+                onAnimationEnd={() => onAnimationEnd(meteorId)}
+            />
         </div>
-    )
-}
+    );
+};
 
-export default Meteor
+export default React.memo(Meteor);
