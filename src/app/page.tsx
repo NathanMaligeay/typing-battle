@@ -49,7 +49,7 @@ export default function Main() {
     return () => {
       window.removeEventListener('resize', checkPositions);
     };
-  }, [words]); // Re-run effect if words change
+  }, [words,highlightedIndex]); // Re-run effect if words change
 
   console.log(words[highlightedIndex])
   
@@ -126,10 +126,10 @@ export default function Main() {
         else {updatedText = prev + key;}
         
 
-        const matchIndex = words.findIndex((word) => updatedText.trim().toLowerCase() === word.text.toLowerCase());
+        //const matchIndex = words.findIndex((word) => updatedText.trim().toLowerCase() === word.text.toLowerCase());
 
-        if (matchIndex !== -1) {
-          setWords((prevWords) => prevWords.filter((_, index) => index !== matchIndex))
+        if (updatedText == words[highlightedIndex].text) {
+          setWords((prevWords) => prevWords.filter((_, index) => index !== highlightedIndex));
           return '';
         }
         return updatedText;
