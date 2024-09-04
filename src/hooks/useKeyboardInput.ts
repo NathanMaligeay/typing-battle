@@ -8,7 +8,7 @@ export const useKeyboardInput = (isPlaying: boolean) => {
 
     setTextTyped(prev => {
       if (e.key === 'Backspace') return prev.slice(0, -1);
-      return e.key.length === 1 ? prev + e.key : prev;
+      return e.key.length === 1 ? prev + e.key : prev; //evite de listen les "enter" "shift" etc smart
     });
   }, [isPlaying]);
 

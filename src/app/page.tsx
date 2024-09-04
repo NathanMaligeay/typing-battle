@@ -22,15 +22,15 @@ const Main: React.FC = () => {
       removeWord(highlightedWord.id);
       resetTextTyped();
     }
-  }, [textTyped, highlightedWord, removeWord, resetTextTyped]);
-
+  }, [textTyped, /*highlightedWord*/, removeWord, resetTextTyped]);
+  
   return (
     <div>
       <div className="playBox">
         {words.map((word) => (
           <Word
             key={word.id}
-            {...word}
+            {...word} //syntaxe pr éviter d'écrire text=word.text etc
             isHighlighted={word.id === highlightedWord?.id}
             onPositionUpdate={updateWordPosition}
             onReachBottom={removeWord}

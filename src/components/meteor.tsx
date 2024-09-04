@@ -64,7 +64,7 @@ const Meteor: React.FC<MeteorProps> = ({ meteorId, onAnimationEnd }) => {
             width: `${randomWidth}px`,
             animation: `moveMeteor-${meteorId} ${animationDuration}s linear 1`,
         };
-    }, [meteorId]);
+    }, [meteorId]); // ### logique de mettre meteorId dans la dep array? une fois que la météorite est créé, son id ne change pas pendant son lifecycle 
 
     return (
         <div className="meteor-container">

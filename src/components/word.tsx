@@ -11,9 +11,10 @@ interface WordProps {
 }
 
 const Word: React.FC<WordProps> = ({ id, text, x, y, isHighlighted, onPositionUpdate, onReachBottom }) => {
-    const intervalRef = useRef<NodeJS.Timeout | null>(null);
+    const intervalRef = useRef<NodeJS.Timeout | null>(null); //permet de stocker une valeur qui ne sert pas à render qqchose et renvoie un objet avec methode "current"
+    // en gros chaque composant Word a son propre interval stocké dans une ref et pas de rerender qd intervalRef est changé
 
-    useEffect(() => {
+    useEffect(() => { 
         intervalRef.current = setInterval(() => {
             const speed = Math.random() * (2 / text.length);
             const newY = y + speed;
@@ -24,12 +25,13 @@ const Word: React.FC<WordProps> = ({ id, text, x, y, isHighlighted, onPositionUp
             } else {
                 onPositionUpdate(id, newY);
             }
-        }, 10);
+        }, 4);
 
         return () => {
             if (intervalRef.current) clearInterval(intervalRef.current);
         };
-    }, [id, text, y, onPositionUpdate, onReachBottom]);
+    }, [id, text, y, onPositionUpdate, onReachBottom]); // ### je suis pas sur de comprendre le useeffect ici, a chaque fois que y change (dc tt le temps),
+    // on recrée un intervalRef pr le mot? donc la vitesse change tout le temps et n'est pas constante ?
 
     const style: React.CSSProperties = {
         position: 'absolute',
@@ -42,4 +44,5 @@ const Word: React.FC<WordProps> = ({ id, text, x, y, isHighlighted, onPositionUp
     return <div style={style}>{text}</div>;
 };
 
-export default React.memo(Word);
+export default React.memo(Word); // ### pas sur de comprendre pq on memoize le component
+// memo = skip le rerender du component si les props du component n'ont pas changé
