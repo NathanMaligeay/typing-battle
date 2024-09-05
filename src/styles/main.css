@@ -19,23 +19,3 @@
   position: absolute;
   transform: translateY(-50%);
 }
-
-@keyframes moveMeteor {
-  0% {
-    left: 100%;
-    /* Start outside the right side of the container */
-    top: 50%;
-    /* Adjust for a diagonal movement */
-    transform: rotate(0deg);
-    /* Optional: Add rotation for a meteor effect */
-  }
-
-  100% {
-    left: -100%;
-    /* Move outside the left side of the container */
-    top: 100%;
-    /* Adjust for a diagonal movement */
-    transform: rotate(120deg);
-    /* Keep rotation consistent */
-  }
-}

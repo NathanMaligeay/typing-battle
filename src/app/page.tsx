@@ -15,14 +15,17 @@ const Main: React.FC = () => {
   const { meteors, removeMeteor } = useMeteors();
   const { textTyped, resetTextTyped } = useKeyboardInput(isPlaying);
 
-  const togglePlaying = () => setIsPlaying(prev => !prev);
+  const togglePlaying = () => {
+    setIsPlaying(prev => !prev);
+    resetTextTyped();
+  }
 
   useEffect(() => {
     if (highlightedWord && textTyped === highlightedWord.text) {
       removeWord(highlightedWord.id);
       resetTextTyped();
     }
-  }, [textTyped, /*highlightedWord*/, removeWord, resetTextTyped]);
+  }, [textTyped, highlightedWord, removeWord, resetTextTyped]);
   
   return (
     <div>

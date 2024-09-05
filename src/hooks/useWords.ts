@@ -20,6 +20,10 @@ export const useWords = (isPlaying: boolean) => { // très grande fct "hooks" qu
   }, []); //comme dep array est vide, cette fonction reste cached de manière identique tt le temps, même avec des rerender (evite de recalculer la valeur de la fonction a chaque fois)
 
   useEffect(() => {
+    if (!isPlaying) {
+      return;
+    }
+    
     const newHighlightedWord = words.reduce((lowest, word) => //lowest = accumulator, word= current value (ie dans la loop)
       word.y > lowest.y ? word : lowest, words[0] || { y: 0 }); //value initiale = premier mot ou bien y=0 ie tout en haut
 
@@ -41,7 +45,7 @@ export const useWords = (isPlaying: boolean) => { // très grande fct "hooks" qu
   }, [isPlaying, addWord]);
 
   const createWord = (): Word => ({ //fct sans arg qui retourne une instance de l'objet Word
-    id: Math.random().toString(36).substr(2, 9),
+    id: Math.random().toString(36),
     text: getRandomWord(),
     x: Math.floor(Math.random() * MAX_X_POSITION),
     y: 0
