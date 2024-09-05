@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import Word from '@/components/word';
 import Meteor from '@/components/meteor';
 import FillableWord from '@/components/fillableword';
@@ -20,13 +20,21 @@ const Main: React.FC = () => {
     resetTextTyped();
   }
 
+  const handleWordReachBottom = useCallback((wordId: string) => {
+    if (highlightedWord?.id === wordId) {
+      resetTextTyped();
+    }
+    
+    removeWord(wordId);
+  }, [removeWord, resetTextTyped, highlightedWord]);
+
   useEffect(() => {
     if (highlightedWord && textTyped === highlightedWord.text) {
       removeWord(highlightedWord.id);
       resetTextTyped();
     }
   }, [textTyped, highlightedWord, removeWord, resetTextTyped]);
-  
+
   return (
     <div>
       <div className="playBox">
@@ -36,7 +44,7 @@ const Main: React.FC = () => {
             {...word} //syntaxe pr éviter d'écrire text=word.text etc
             isHighlighted={word.id === highlightedWord?.id}
             onPositionUpdate={updateWordPosition}
-            onReachBottom={removeWord}
+            onReachBottom={handleWordReachBottom}
           />
         ))}
         {meteors.map((meteor) => (
