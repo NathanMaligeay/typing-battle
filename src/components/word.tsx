@@ -16,11 +16,11 @@ const Word: React.FC<WordProps> = ({ id, text, x, y, isHighlighted, onPositionUp
     const yRef = useRef<number>(y)
     const speedRef = useRef<number>(text.length);
 
-    useEffect(() => { 
+    useEffect(() => {
         intervalRef.current = setInterval(() => {
 
             const newY = yRef.current + 1;
-            
+
             if (newY >= 780) {
                 if (intervalRef.current) clearInterval(intervalRef.current);
                 onReachBottom(id);
@@ -28,7 +28,7 @@ const Word: React.FC<WordProps> = ({ id, text, x, y, isHighlighted, onPositionUp
                 yRef.current = newY;
                 onPositionUpdate(id, newY);
             }
-        }, 4*speedRef.current);
+        }, 4 * speedRef.current);
 
         return () => {
             if (intervalRef.current) clearInterval(intervalRef.current);
