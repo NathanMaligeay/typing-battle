@@ -36,7 +36,7 @@ const Main: React.FC = () => {
             {...word} //syntaxe pr éviter d'écrire text=word.text etc
             isHighlighted={word.id === highlightedWord?.id}
             onPositionUpdate={updateWordPosition}
-            onReachBottom={removeWord}
+            onReachBottom={[removeWord, resetTextTyped]}
           />
         ))}
         {meteors.map((meteor) => (

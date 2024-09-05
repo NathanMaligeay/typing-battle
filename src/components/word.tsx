@@ -7,7 +7,7 @@ interface WordProps {
     y: number;
     isHighlighted: boolean;
     onPositionUpdate: (id: string, y: number) => void;
-    onReachBottom: (id: string) => void;
+    onReachBottom: [(id: string) => void, () => void];
 }
 
 const Word: React.FC<WordProps> = ({ id, text, x, y, isHighlighted, onPositionUpdate, onReachBottom }) => {
@@ -23,7 +23,8 @@ const Word: React.FC<WordProps> = ({ id, text, x, y, isHighlighted, onPositionUp
 
             if (newY >= 780) {
                 if (intervalRef.current) clearInterval(intervalRef.current);
-                onReachBottom(id);
+                onReachBottom[0](id);
+                onReachBottom[1]();
             } else {
                 yRef.current = newY;
                 onPositionUpdate(id, newY);
@@ -33,7 +34,7 @@ const Word: React.FC<WordProps> = ({ id, text, x, y, isHighlighted, onPositionUp
         return () => {
             if (intervalRef.current) clearInterval(intervalRef.current);
         };
-    }, [id, onPositionUpdate, onReachBottom]); // ### je suis pas sur de comprendre le useeffect ici, a chaque fois que y change (dc tt le temps),
+    }, [id, onPositionUpdate, onReachBottom[0], onReachBottom[1]]); // ### je suis pas sur de comprendre le useeffect ici, a chaque fois que y change (dc tt le temps),
     // on recrée un intervalRef pr le mot? donc la vitesse change tout le temps et n'est pas constante ?
 
     const style: React.CSSProperties = {

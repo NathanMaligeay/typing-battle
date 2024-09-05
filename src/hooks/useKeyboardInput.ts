@@ -17,7 +17,7 @@ export const useKeyboardInput = (isPlaying: boolean) => {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
-  const resetTextTyped = () => setTextTyped('');
+  const resetTextTyped = useCallback(() => setTextTyped(''),[setTextTyped]);
 
   return { textTyped, resetTextTyped };
 };
