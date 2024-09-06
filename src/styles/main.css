@@ -1,9 +1,31 @@
+@font-face {
+  font-family: 'silkscreen';
+  src: url('../fonts/slkscr.ttf') format('truetype'),
+}
+
+.word {
+  font-family: 'silkscreen';
+}
+
+.HUDbox {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 .playBox {
+  border-radius: 10px;
+  border: solid grey 5px;
   background-color: rgb(19, 3, 26);
   height: 800px;
   width: 800px;
   margin: auto;
   position: relative;
+}
+
+.inputTextDiv {
+  color: red;
+  background-color: green;
 }
 
 .meteor-container {

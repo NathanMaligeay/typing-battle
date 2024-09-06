@@ -3,10 +3,12 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import Word from '@/components/word';
 import Meteor from '@/components/meteor';
+import Healthbar from '@/components/healthbar';
 import FillableWord from '@/components/fillableword';
 import { useWords, Word as WordType } from '@/hooks/useWords';
 import { useMeteors } from '@/hooks/useMeteors';
 import { useKeyboardInput } from '@/hooks/useKeyboardInput';
+import { useHealth } from '@/hooks/useHealth';
 import "../styles/main.css";
 
 const Main: React.FC = () => {
@@ -14,10 +16,12 @@ const Main: React.FC = () => {
   const { words, highlightedWord, removeWord, updateWordPosition } = useWords(isPlaying);
   const { meteors, removeMeteor } = useMeteors();
   const { textTyped, resetTextTyped } = useKeyboardInput(isPlaying);
+  const { health, takeDamage, resetHealth } = useHealth();
 
   const togglePlaying = () => {
     setIsPlaying(prev => !prev);
     resetTextTyped();
+    resetHealth();
   }
 
   const handleWordReachBottom = useCallback((wordId: string) => {
@@ -26,7 +30,8 @@ const Main: React.FC = () => {
     }
     
     removeWord(wordId);
-  }, [removeWord, resetTextTyped, highlightedWord]);
+    takeDamage();
+  }, [removeWord, resetTextTyped, takeDamage, highlightedWord]);
 
   useEffect(() => {
     if (highlightedWord && textTyped === highlightedWord.text) {
@@ -35,8 +40,15 @@ const Main: React.FC = () => {
     }
   }, [textTyped, highlightedWord, removeWord, resetTextTyped]);
 
+  useEffect(() => {
+    if (health === 0) {
+      alert('L');
+      togglePlaying();
+    }
+  }, [health, togglePlaying])
+
   return (
-    <div>
+    <div className='HUDbox'>
       <div className="playBox">
         {words.map((word) => (
           <Word
@@ -54,12 +66,13 @@ const Main: React.FC = () => {
             onAnimationEnd={removeMeteor}
           />
         ))}
+        
       </div>
-      <p>{textTyped}</p>
+      <div className='inputTextDiv'>{textTyped}</div>
       <button onClick={togglePlaying}>
         {isPlaying ? "Stop game" : "Start game"}
       </button>
-      <FillableWord text={'this is a test'} color={'green'} percentage={80} />
+      <Healthbar health={health} isPlaying={isPlaying} />
     </div>
   );
 };

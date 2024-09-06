@@ -40,11 +40,11 @@ const Word: React.FC<WordProps> = ({ id, text, x, y, isHighlighted, onPositionUp
         position: 'absolute',
         left: `${x}px`,
         top: `${y}px`,
-        fontSize: '12px',
+        fontSize: '15px',
         color: isHighlighted ? 'red' : 'yellow',
     };
 
-    return <div style={style}>{text}</div>;
+    return <div className='word' style={style}>{text}</div>;
 };
 
 export default Word;
