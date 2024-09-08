@@ -3,29 +3,117 @@
   src: url('../fonts/slkscr.ttf') format('truetype'),
 }
 
+html {
+  background-image: url('../../public/galaxy_background.png');
+  background-size: cover;
+  background-position: center;
+}
+
 .word {
   font-family: 'silkscreen';
 }
 
 .HUDbox {
   display: flex;
-  flex-direction: row;
   justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+  gap: 40px;
+}
+
+.leftPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Center horizontally if needed */
+  gap: 10px;
+  /* Space between playBox and newDiv */
+}
+
+.playButton {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-family: 'silkscreen';
+  font-size: 30px;
+  height: 50px;
+  width: 150px;
+  /* justify-content: center;
+  align-items: center; */
+  margin: auto;
+  overflow: hidden;
+  border: solid yellow 5px;
+  border-radius: 10px;
+  background-color: black;
+  color: yellow;
+  transform: translateX(-75px);
+  z-index: 1000;
+  /* Ensure it's on top */
 }
 
 .playBox {
   border-radius: 10px;
-  border: solid grey 5px;
+  border: solid yellow 5px;
   background-color: rgb(19, 3, 26);
   height: 800px;
   width: 800px;
-  margin: auto;
   position: relative;
 }
 
+.rightPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Center the boxes horizontally */
+  gap: 10px;
+  /* Add spacing between userBox, scoreBox, and buttonPanel */
+}
+
+.userBox,
+.scoreBox {
+  width: 200px;
+  height: 50px;
+  border: 5px solid yellow;
+  border-radius: 10px;
+  font-family: 'silkscreen';
+  color: yellow;
+  background-color: rgb(19, 3, 26);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* Center text inside boxes */
+}
+
+.verticalPanel {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  /* Space between Freeze and Nuke buttons */
+  margin-top: 20px;
+  /* Adjust space between scoreBox and buttons */
+}
+
 .inputTextDiv {
-  color: red;
-  background-color: green;
+  width: 800px;
+  height: 50px;
+  color: yellow;
+  background-color: rgb(19, 3, 26);
+  border: solid 5px yellow;
+  border-radius: 10px;
+  font-family: 'silkscreen';
+  align-content: center;
+  text-align: center;
+  font-size: 30px;
+}
+
+.spaceBeagle {
+  width: 800px;
+  overflow: hidden;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
 }
 
 .meteor-container {

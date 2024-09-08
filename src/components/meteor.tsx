@@ -53,6 +53,7 @@ const Meteor: React.FC<MeteorProps> = ({ meteorId, onAnimationEnd }) => {
         const randomRotationStart = Math.floor(Math.random() * 360);
         const randomRotationEnd = Math.floor(Math.random() * 360);
         const animationDuration = Math.pow(Math.log2(randomWidth), 2) / 1.5;
+        const zIndex = Math.floor(Math.random() * 2) + 1;
 
         const keyframes = generateKeyframes(sideStart, meteorId, randomYStartPosition, randomYEndPosition, randomXStartPosition, randomXEndPosition, randomRotationStart, randomRotationEnd);
 
@@ -62,6 +63,7 @@ const Meteor: React.FC<MeteorProps> = ({ meteorId, onAnimationEnd }) => {
 
         return {
             width: `${randomWidth}px`,
+            zIndex: `${zIndex}`,
             animation: `moveMeteor-${meteorId} ${animationDuration}s linear 1`,
         };
     }, [meteorId]); // ### logique de mettre meteorId dans la dep array? une fois que la météorite est créé, son id ne change pas pendant son lifecycle 

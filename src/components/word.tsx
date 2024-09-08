@@ -21,7 +21,7 @@ const Word: React.FC<WordProps> = ({ id, text, x, y, isHighlighted, onPositionUp
 
             const newY = yRef.current + 1;
 
-            if (newY >= 780) {
+            if (newY >= 640) {
                 if (intervalRef.current) clearInterval(intervalRef.current);
                 onReachBottom(id);
             } else {
@@ -42,6 +42,7 @@ const Word: React.FC<WordProps> = ({ id, text, x, y, isHighlighted, onPositionUp
         top: `${y}px`,
         fontSize: '15px',
         color: isHighlighted ? 'red' : 'yellow',
+        zIndex: '2',
     };
 
     return <div className='word' style={style}>{text}</div>;

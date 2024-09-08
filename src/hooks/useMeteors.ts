@@ -17,7 +17,7 @@ export const useMeteors = () => {
       }
     };
 
-    const interval = setInterval(addMeteor, 5000);
+    const interval = setInterval(addMeteor, 2500);
     return () => clearInterval(interval);
   }, []);
 

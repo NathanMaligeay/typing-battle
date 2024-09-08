@@ -5,10 +5,12 @@ import Word from '@/components/word';
 import Meteor from '@/components/meteor';
 import Healthbar from '@/components/healthbar';
 import FillableWord from '@/components/fillableword';
+import ScoreBox from '@/components/scorebox';
 import { useWords, Word as WordType } from '@/hooks/useWords';
 import { useMeteors } from '@/hooks/useMeteors';
 import { useKeyboardInput } from '@/hooks/useKeyboardInput';
 import { useHealth } from '@/hooks/useHealth';
+import { useScore } from '@/hooks/useScore';
 import "../styles/main.css";
 
 const Main: React.FC = () => {
@@ -17,11 +19,13 @@ const Main: React.FC = () => {
   const { meteors, removeMeteor } = useMeteors();
   const { textTyped, resetTextTyped } = useKeyboardInput(isPlaying);
   const { health, takeDamage, resetHealth } = useHealth();
+  const {updateCombo, resetCombo, addWordScore, resetScore, score, hiScore} = useScore(isPlaying);
 
   const togglePlaying = () => {
     setIsPlaying(prev => !prev);
     resetTextTyped();
     resetHealth();
+    resetScore();
   }
 
   const handleWordReachBottom = useCallback((wordId: string) => {
@@ -29,6 +33,7 @@ const Main: React.FC = () => {
       resetTextTyped();
     }
     
+    resetCombo();
     removeWord(wordId);
     takeDamage();
   }, [removeWord, resetTextTyped, takeDamage, highlightedWord]);
@@ -37,6 +42,8 @@ const Main: React.FC = () => {
     if (highlightedWord && textTyped === highlightedWord.text) {
       removeWord(highlightedWord.id);
       resetTextTyped();
+      updateCombo();
+      addWordScore(textTyped);
     }
   }, [textTyped, highlightedWord, removeWord, resetTextTyped]);
 
@@ -49,31 +56,47 @@ const Main: React.FC = () => {
 
   return (
     <div className='HUDbox'>
-      <div className="playBox">
-        {words.map((word) => (
-          <Word
-            key={word.id}
-            {...word} //syntaxe pr éviter d'écrire text=word.text etc
-            isHighlighted={word.id === highlightedWord?.id}
-            onPositionUpdate={updateWordPosition}
-            onReachBottom={handleWordReachBottom}
-          />
-        ))}
-        {meteors.map((meteor) => (
-          <Meteor
-            key={meteor.id}
-            meteorId={meteor.id}
-            onAnimationEnd={removeMeteor}
-          />
-        ))}
-        
+      <div className='leftPanel'>
+        <div className="playBox">
+          {isPlaying ? null :
+            <button className="playButton" onClick={togglePlaying}>
+              PLAY
+            </button>
+          }
+          {words.map((word) => (
+            <Word
+              key={word.id}
+              {...word}
+              isHighlighted={word.id === highlightedWord?.id}
+              onPositionUpdate={updateWordPosition}
+              onReachBottom={handleWordReachBottom}
+            />
+          ))}
+          {meteors.map((meteor) => (
+            <Meteor
+              key={meteor.id}
+              meteorId={meteor.id}
+              onAnimationEnd={removeMeteor}
+            />
+          ))}
+          <img className='spaceBeagle' src='space_beaglev2.png'></img>
+        </div>
+
+        <div className='inputTextDiv'>{textTyped}</div>
       </div>
-      <div className='inputTextDiv'>{textTyped}</div>
-      <button onClick={togglePlaying}>
-        {isPlaying ? "Stop game" : "Start game"}
-      </button>
-      <Healthbar health={health} isPlaying={isPlaying} />
+      <div className='rightPanel'>
+        <div className='userBox'>im user</div>
+        <ScoreBox currentScore={score} highScore={hiScore}/>
+        <div className='verticalPanel'>
+          <Healthbar health={health} isPlaying={isPlaying} />
+          <div>im freeze</div>
+          <div>im nuke</div>
+        </div>
+      </div>
+
+
     </div>
+
   );
 };
 
