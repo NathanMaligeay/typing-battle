@@ -86,11 +86,11 @@ const Main: React.FC = () => {
       </div>
       <div className='rightPanel'>
         <div className='userBox'>im user</div>
-        <ScoreBox currentScore={score} highScore={hiScore}/>
+        <ScoreBox currentScore={score} highScore={hiScore} isPlaying={isPlaying}/>
         <div className='verticalPanel'>
           <Healthbar health={health} isPlaying={isPlaying} />
-          <div>im freeze</div>
-          <div>im nuke</div>
+          <FillableWord  text='FREEZE' color='cornflowerblue' percentage={50}/>
+          <FillableWord  text='NUKE' color='orange' percentage={100}/>
         </div>
       </div>
 

@@ -44,7 +44,7 @@ html {
   overflow: hidden;
   border: solid yellow 5px;
   border-radius: 10px;
-  background-color: black;
+  background-color: rgb(8, 0, 12);
   color: yellow;
   transform: translateX(-75px);
   z-index: 1000;
@@ -89,9 +89,10 @@ html {
   display: flex;
   flex-direction: row;
   gap: 10px;
-  /* Space between Freeze and Nuke buttons */
+  width: inherit;
   margin-top: 20px;
-  /* Adjust space between scoreBox and buttons */
+  justify-content: space-between;
+  
 }
 
 .inputTextDiv {

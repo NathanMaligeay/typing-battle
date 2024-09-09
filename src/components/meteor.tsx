@@ -71,7 +71,7 @@ const Meteor: React.FC<MeteorProps> = ({ meteorId, onAnimationEnd }) => {
     return (
         <div className="meteor-container">
             <img
-                src="meteor.png"
+                src="meteor-removebg-preview.png"
                 className="meteor"
                 alt="Meteor"
                 style={meteorStyle}

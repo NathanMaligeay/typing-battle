@@ -8,18 +8,26 @@ interface fillableWordProps {
 
 const FillableWord: React.FC<fillableWordProps> = ({ text, color, percentage }) => {
 
+    const divStyle : React.CSSProperties = {
+        
+    };
 
     const fillableWordStyle: React.CSSProperties = {
-        background: `linear-gradient(to right, ${color} ${percentage}%, transparent ${percentage}%)`,
+        background: `linear-gradient(to top, ${color} ${percentage}%, transparent ${percentage}%)`,
         WebkitBackgroundClip: 'text',
         color: 'transparent',
         WebkitTextStrokeWidth: '1px',
-        WebkitTextStrokeColor: 'black',
+        WebkitTextStrokeColor: 'white',
         display: 'inline-block',
+        writingMode: 'vertical-lr',
+        textOrientation: 'upright', 
+        fontFamily : 'silkscreen',
+        fontSize: '45px',
+        margin: '0',
     };
 
     return (
-        <div>
+        <div style={divStyle}>
             <p style={fillableWordStyle}>{text}</p>
         </div>
     );
