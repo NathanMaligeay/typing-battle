@@ -8,7 +8,13 @@ export const useKeyboardInput = (isPlaying: boolean) => {
 
     setTextTyped(prev => {
       if (e.key === 'Backspace') return prev.slice(0, -1);
-      return e.key.length === 1 ? prev + e.key : prev; //evite de listen les "enter" "shift" etc smart
+
+       // Check if the input key is a single character and not a number
+      if (e.key.length === 1 && isNaN(Number(e.key))) {
+        return prev + e.key; // Only add non-number characters
+      }
+
+      return prev; // Do nothing if it's a number or another special key
     });
   }, [isPlaying]);
 

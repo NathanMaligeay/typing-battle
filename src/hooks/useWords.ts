@@ -1,6 +1,25 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 
-const WORDS_ARRAY = ["chicken", "fast", "extravagant"];
+const WORDS_ARRAY = [
+  "apple", "banana", "orange", "grape", "pineapple", "strawberry", "melon", "kiwi", "mango", "pear", 
+  "peach", "plum", "cherry", "lemon", "lime", "watermelon", "blueberry", "raspberry", "blackberry", "apricot",
+  "cucumber", "carrot", "broccoli", "cauliflower", "spinach", "lettuce", "celery", "pepper", "onion", "tomato",
+  "potato", "radish", "pumpkin", "beetroot", "zucchini", "squash", "cabbage", "peas", "asparagus", "corn",
+  "pizza", "burger", "sandwich", "pasta", "spaghetti", "tacos", "burrito", "sushi", "noodles", "rice",
+  "steak", "chicken", "pork", "beef", "lamb", "duck", "shrimp", "lobster", "crab", "salmon",
+  "milk", "cheese", "butter", "yogurt", "cream", "ice cream", "chocolate", "cake", "cookies", "donut",
+  "coffee", "tea", "juice", "water", "soda", "wine", "beer", "whiskey", "vodka", "rum",
+  "soccer", "basketball", "tennis", "golf", "cricket", "rugby", "hockey", "swimming", "running", "cycling",
+  "fast", "slow", "big", "small", "tall", "short", "wide", "narrow", "heavy", "light",
+  "blue", "red", "green", "yellow", "purple", "pink", "brown", "black", "white", "gray",
+  "sun", "moon", "stars", "cloud", "rain", "snow", "storm", "wind", "fog", "lightning",
+  "dog", "cat", "bird", "fish", "hamster", "rabbit", "horse", "cow", "sheep", "goat",
+  "train", "car", "bus", "bike", "plane", "boat", "subway", "truck", "motorcycle", "scooter",
+  "house", "apartment", "building", "school", "hospital", "church", "museum", "restaurant", "library", "store",
+  "pen", "pencil", "paper", "book", "notebook", "laptop", "phone", "tablet", "camera", "watch",
+  "chair", "table", "bed", "sofa", "desk", "shelf", "drawer", "cabinet", "lamp", "fan",
+  "happy", "sad", "angry", "excited", "bored", "tired", "nervous", "scared", "proud", "jealous"
+];
 const MAX_X_POSITION = 800;
 
 export interface Word {
@@ -94,5 +113,5 @@ export const useWords = (isPlaying: boolean) => {
       word.id === id ? { ...word, y } : word
     )), [setWords]);
 
-  return { words, highlightedWord, removeWord, updateWordPosition };
+  return { words, highlightedWord, removeWord, updateWordPosition, setWords };
 };

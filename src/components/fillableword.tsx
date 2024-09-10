@@ -4,12 +4,14 @@ interface fillableWordProps {
     text: string;
     color: string;
     percentage: number;
+    isPlaying: boolean;
+    actionScore: number;
 }
 
-const FillableWord: React.FC<fillableWordProps> = ({ text, color, percentage }) => {
+const FillableWord: React.FC<fillableWordProps> = ({ text, color, percentage, isPlaying, actionScore }) => {
 
-    const divStyle : React.CSSProperties = {
-        
+    const divStyle: React.CSSProperties = {
+
     };
 
     const fillableWordStyle: React.CSSProperties = {
@@ -20,17 +22,25 @@ const FillableWord: React.FC<fillableWordProps> = ({ text, color, percentage }) 
         WebkitTextStrokeColor: 'white',
         display: 'inline-block',
         writingMode: 'vertical-lr',
-        textOrientation: 'upright', 
-        fontFamily : 'silkscreen',
+        textOrientation: 'upright',
+        fontFamily: 'silkscreen',
         fontSize: '45px',
         margin: '0',
     };
 
-    return (
-        <div style={divStyle}>
-            <p style={fillableWordStyle}>{text}</p>
-        </div>
-    );
+    const customStyle = {
+        color: 'yellow',
+        fontSize: '20px'
+    };
+
+    if (isPlaying) {
+        return (
+            <div style={divStyle}>
+                <p style={fillableWordStyle}>{text}</p>
+                {actionScore === 100 && <p style={customStyle}>[1]</p>}
+            </div>
+        );
+    }
 };
 
 export default FillableWord;
