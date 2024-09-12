@@ -6,12 +6,13 @@ interface fillableWordProps {
     percentage: number;
     isPlaying: boolean;
     actionScore: number;
+    keyToPress: string;
 }
 
-const FillableWord: React.FC<fillableWordProps> = ({ text, color, percentage, isPlaying, actionScore }) => {
+const FillableWord: React.FC<fillableWordProps> = ({ text, color, percentage, isPlaying, actionScore, keyToPress }) => {
 
     const divStyle: React.CSSProperties = {
-
+        display: 'inline-block'
     };
 
     const fillableWordStyle: React.CSSProperties = {
@@ -30,14 +31,15 @@ const FillableWord: React.FC<fillableWordProps> = ({ text, color, percentage, is
 
     const customStyle = {
         color: 'yellow',
-        fontSize: '20px'
+        fontSize: '25px',
+        fontFamily: 'silkscreen'
     };
 
     if (isPlaying) {
         return (
             <div style={divStyle}>
-                <p style={fillableWordStyle}>{text}</p>
-                {actionScore === 100 && <p style={customStyle}>[1]</p>}
+                <span style={fillableWordStyle}>{text}</span>
+                {actionScore === 100 && <p style={customStyle}>[{keyToPress}]</p>}
             </div>
         );
     }

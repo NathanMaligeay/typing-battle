@@ -7,7 +7,7 @@ const WORDS_ARRAY = [
   "potato", "radish", "pumpkin", "beetroot", "zucchini", "squash", "cabbage", "peas", "asparagus", "corn",
   "pizza", "burger", "sandwich", "pasta", "spaghetti", "tacos", "burrito", "sushi", "noodles", "rice",
   "steak", "chicken", "pork", "beef", "lamb", "duck", "shrimp", "lobster", "crab", "salmon",
-  "milk", "cheese", "butter", "yogurt", "cream", "ice cream", "chocolate", "cake", "cookies", "donut",
+  "milk", "cheese", "butter", "yogurt", "cream", "dumbbell", "chocolate", "cake", "cookies", "donut",
   "coffee", "tea", "juice", "water", "soda", "wine", "beer", "whiskey", "vodka", "rum",
   "soccer", "basketball", "tennis", "golf", "cricket", "rugby", "hockey", "swimming", "running", "cycling",
   "fast", "slow", "big", "small", "tall", "short", "wide", "narrow", "heavy", "light",
@@ -27,9 +27,10 @@ export interface Word {
   text: string;
   x: number;
   y: number;
+  wordIsPaused: boolean;
 }
 
-export const useWords = (isPlaying: boolean) => {
+export const useWords = (isPlaying: boolean, isPaused: boolean) => {
   const [words, setWords] = useState<Word[]>([]);
   const [highlightedWord, setHighlightedWord] = useState<Word | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -97,7 +98,8 @@ export const useWords = (isPlaying: boolean) => {
       id: Math.random().toString(36),
       text: text,
       x: Math.max(Math.random()*5, Math.min(Math.floor(Math.random() * MAX_X_POSITION), MAX_X_POSITION - measureWordWidthWithCanvas(text)-Math.random()*5)),
-      y: 0
+      y: 0,
+      wordIsPaused: false,
     };
   };
 

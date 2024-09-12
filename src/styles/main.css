@@ -6,7 +6,7 @@
 html {
   background-image: url('../../public/galaxy_background.png');
   background-size: cover;
-  background-position: center;
+  background-position:unset;
 }
 
 .word {
@@ -14,6 +14,7 @@ html {
 }
 
 .HUDbox {
+  position: relative; /* Add this if it's not already present */
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -38,8 +39,6 @@ html {
   font-size: 30px;
   height: 50px;
   width: 150px;
-  /* justify-content: center;
-  align-items: center; */
   margin: auto;
   overflow: hidden;
   border: solid yellow 5px;
@@ -48,7 +47,19 @@ html {
   color: yellow;
   transform: translateX(-75px);
   z-index: 1000;
-  /* Ensure it's on top */
+}
+
+.endButton,.pauseButton {
+  font-family: 'silkscreen';
+  font-size: 30px;
+  height: 50px;
+  width: 150px;
+  margin: auto;
+  overflow: hidden;
+  border: solid yellow 5px;
+  border-radius: 10px;
+  background-color: rgb(8, 0, 12);
+  color: yellow;
 }
 
 .playBox {

@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
+import { Word } from './useWords';
 
-export const useKeyboardInput = (isPlaying: boolean) => {
+export const useKeyboardInput = (isPlaying: boolean, highlightedWord: Word | null) => {
   const [textTyped, setTextTyped] = useState('');
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -9,14 +10,15 @@ export const useKeyboardInput = (isPlaying: boolean) => {
     setTextTyped(prev => {
       if (e.key === 'Backspace') return prev.slice(0, -1);
 
-       // Check if the input key is a single character and not a number
-      if (e.key.length === 1 && isNaN(Number(e.key))) {
-        return prev + e.key; // Only add non-number characters
+      if (highlightedWord && textTyped.length < highlightedWord.text.length) {
+        if (e.key.length === 1 && isNaN(Number(e.key))) {
+          return prev + e.key;
+        }
       }
 
-      return prev; // Do nothing if it's a number or another special key
+      return prev;
     });
-  }, [isPlaying]);
+  }, [isPlaying, highlightedWord, textTyped]);
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);

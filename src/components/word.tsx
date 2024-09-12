@@ -5,18 +5,24 @@ interface WordProps {
     text: string;
     x: number;
     y: number;
+    wordIsPaused: boolean;
     isHighlighted: boolean;
     onPositionUpdate: (id: string, y: number) => void;
     onReachBottom: (id: string) => void;
 }
 
-const Word: React.FC<WordProps> = ({ id, text, x, y, isHighlighted, onPositionUpdate, onReachBottom }) => {
+const Word: React.FC<WordProps> = ({ id, text, x, y, wordIsPaused, isHighlighted, onPositionUpdate, onReachBottom }) => {
     const intervalRef = useRef<NodeJS.Timeout | null>(null); //permet de stocker une valeur qui ne sert pas à render qqchose et renvoie un objet avec methode "current"
     // en gros chaque composant Word a son propre interval stocké dans une ref et pas de rerender qd intervalRef est changé
     const yRef = useRef<number>(y)
     const speedRef = useRef<number>(text.length);
 
     useEffect(() => {
+        if (wordIsPaused) {
+            if (intervalRef.current) clearInterval(intervalRef.current);
+            return;
+        }
+
         intervalRef.current = setInterval(() => {
 
             const newY = yRef.current + 1;
@@ -33,7 +39,7 @@ const Word: React.FC<WordProps> = ({ id, text, x, y, isHighlighted, onPositionUp
         return () => {
             if (intervalRef.current) clearInterval(intervalRef.current);
         };
-    }, [id, onPositionUpdate, onReachBottom]); // ### je suis pas sur de comprendre le useeffect ici, a chaque fois que y change (dc tt le temps),
+    }, [id, onPositionUpdate, onReachBottom, wordIsPaused, speedRef.current ]); // ### je suis pas sur de comprendre le useeffect ici, a chaque fois que y change (dc tt le temps),
     // on recrée un intervalRef pr le mot? donc la vitesse change tout le temps et n'est pas constante ?
 
     const style: React.CSSProperties = {

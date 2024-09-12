@@ -1,22 +1,27 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 
-export const useScore = (isPlaying: boolean) => {
+export const useScore = (isPlaying: boolean, isPaused: boolean) => {
     const [score, setScore] = useState<number>(0);
     const [hiScore, setHiScore] = useState<number>(0);
     const comboRef = useRef<number>(1);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-    useEffect(() => { //ajoute +1 au score toutes les secondes
-        const addScore = () => {
+    useEffect(() => {
+
+        const addOneScore = () => {
             setScore((prev) => prev+1);
         }
+
         if (isPlaying) {
-            intervalRef.current = setInterval(addScore, 1000);
+            intervalRef.current = setInterval(addOneScore, 1000);
+        }
+        if (isPaused) {
+            if (intervalRef.current) clearInterval(intervalRef.current);
         }
         return () => {
             if (intervalRef.current) clearInterval(intervalRef.current);
         }
-    },[isPlaying, setScore, intervalRef])
+    },[isPlaying, isPaused, setScore, intervalRef])
 
     useEffect(() => { //gère le highscore (s'update en live en fct du score, je voudrais que ça s'update qu'à la fin de partie)
         if (score > hiScore) {
@@ -30,9 +35,14 @@ export const useScore = (isPlaying: boolean) => {
 
     const addWordScore = useCallback((word: string) => {
         setScore((prev) => prev + (word.length * comboRef.current));
+        return (word.length * comboRef.current);
     },[]);
 
+    const addPointScore = useCallback((points: number) => {
+        setScore((prev) => prev + points);
+    },[])
 
-    return {updateCombo, resetCombo, addWordScore, resetScore, score, hiScore};
+
+    return {updateCombo, resetCombo, addWordScore, resetScore, score, hiScore, addPointScore};
 
 }

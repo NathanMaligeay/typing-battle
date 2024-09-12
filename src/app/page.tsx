@@ -17,25 +17,33 @@ import "../styles/main.css";
 
 const Main: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const { words, highlightedWord, removeWord, updateWordPosition, setWords } = useWords(isPlaying);
+  const [isPaused, setIsPaused] = useState(false);
+  const { words, highlightedWord, removeWord, updateWordPosition, setWords } = useWords(isPlaying, isPaused);
   const { meteors, removeMeteor } = useMeteors();
-  const { textTyped, resetTextTyped } = useKeyboardInput(isPlaying);
+  const { textTyped, resetTextTyped } = useKeyboardInput(isPlaying, highlightedWord);
   const { health, takeDamage, resetHealth } = useHealth();
-  const {updateCombo, resetCombo, addWordScore, resetScore, score, hiScore} = useScore(isPlaying);
-  const {freezeScoreRef, nukeScoreRef} = useAction(score, words, setWords, isPlaying);
+  const { updateCombo, resetCombo, addWordScore, resetScore, score, hiScore, addPointScore } = useScore(isPlaying, isPaused);
+  const { freezeScoreRef, nukeScoreRef, addScoreAction, resetScoreAction } = useAction(setWords, isPlaying, addPointScore);
 
   const togglePlaying = () => {
     setIsPlaying(prev => !prev);
     resetTextTyped();
     resetHealth();
     resetScore();
+    resetScoreAction();
   }
+
+  const togglePausing = () => {
+    setIsPaused((prev) => !prev);
+  }
+
+  console.log(isPaused)
 
   const handleWordReachBottom = useCallback((wordId: string) => {
     if (highlightedWord?.id === wordId) {
       resetTextTyped();
     }
-    
+
     resetCombo();
     removeWord(wordId);
     takeDamage();
@@ -47,6 +55,7 @@ const Main: React.FC = () => {
       resetTextTyped();
       updateCombo();
       addWordScore(highlightedWord.text);
+      addScoreAction();
     }
   }, [textTyped, highlightedWord, removeWord, resetTextTyped]);
 
@@ -85,16 +94,28 @@ const Main: React.FC = () => {
           <img className='spaceBeagle' src='space_beaglev2.png'></img>
         </div>
 
-        <TextTypedBox isPlaying={isPlaying} textTyped={textTyped} highlightedWordText={highlightedWord?.text || ''}/>
+        <TextTypedBox isPlaying={isPlaying} textTyped={textTyped} highlightedWordText={highlightedWord?.text || ''} />
       </div>
       <div className='rightPanel'>
         <div className='userBox'>im user</div>
-        <ScoreBox currentScore={score} highScore={hiScore} isPlaying={isPlaying}/>
+        <ScoreBox currentScore={score} highScore={hiScore} isPlaying={isPlaying} />
         <div className='verticalPanel'>
           <Healthbar health={health} isPlaying={isPlaying} />
-          <FillableWord  text='FREEZE' color='cornflowerblue' percentage={50} isPlaying={isPlaying} actionScore={freezeScoreRef.current}/>
-          <FillableWord  text='NUKE' color='orange' percentage={100} isPlaying={isPlaying} actionScore={nukeScoreRef.current}/>
+          <FillableWord text='NUKE' color='orange' percentage={nukeScoreRef.current} isPlaying={isPlaying} actionScore={nukeScoreRef.current} keyToPress='1' />
+          <FillableWord text='FREEZE' color='cornflowerblue' percentage={freezeScoreRef.current} isPlaying={isPlaying} actionScore={freezeScoreRef.current} keyToPress='2' />
         </div>
+        {isPlaying ?
+          <button className="pauseButton" onClick={togglePausing}>
+            PAUSE
+          </button>
+          : null
+        }
+        {isPlaying ?
+          <button className="endButton" onClick={togglePlaying}>
+            STOP
+          </button>
+          : null
+        }
       </div>
 
 
