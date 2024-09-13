@@ -1,16 +1,17 @@
 import { useState, useCallback, useEffect } from 'react';
 import { Word } from './useWords';
 
-export const useKeyboardInput = (isPlaying: boolean, highlightedWord: Word | null) => {
+export const useKeyboardInput = (isPlaying: boolean, highlightedWord: Word | null, isPaused: boolean) => {
   const [textTyped, setTextTyped] = useState('');
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (!isPlaying) return;
+    if (isPaused) return;
 
     setTextTyped(prev => {
       if (e.key === 'Backspace') return prev.slice(0, -1);
-
-      if (highlightedWord && textTyped.length < highlightedWord.text.length) {
+      
+      if (highlightedWord?.text && textTyped.length < highlightedWord.text.length) {
         if (e.key.length === 1 && isNaN(Number(e.key))) {
           return prev + e.key;
         }
@@ -18,7 +19,7 @@ export const useKeyboardInput = (isPlaying: boolean, highlightedWord: Word | nul
 
       return prev;
     });
-  }, [isPlaying, highlightedWord, textTyped]);
+  }, [isPlaying, highlightedWord, textTyped, isPaused]);
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);
@@ -27,5 +28,5 @@ export const useKeyboardInput = (isPlaying: boolean, highlightedWord: Word | nul
 
   const resetTextTyped = useCallback(() => setTextTyped(''), [setTextTyped]);
 
-  return { textTyped, resetTextTyped };
+  return { textTyped, resetTextTyped, setTextTyped };
 };

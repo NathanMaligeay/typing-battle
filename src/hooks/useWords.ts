@@ -40,6 +40,10 @@ export const useWords = (isPlaying: boolean, isPaused: boolean) => {
     setWords(prevWords => [...prevWords, createWord()]);
   }, []); 
 
+  const resetWordIntervalRef = useCallback(() => {
+    addWordIntervalRef.current = 2000;
+  },[])
+
   useEffect(() => {
     if (!isPlaying) {
       return;
@@ -60,13 +64,18 @@ export const useWords = (isPlaying: boolean, isPaused: boolean) => {
       return;
     }
 
-    addWord();
+    if (isPaused) {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      return;
+    }
+
+    //addWord(); //you can spam pause to generate words, but i dont want to remove the initial word generation, need to find a workaround
     intervalRef.current = setInterval(addWord, addWordIntervalRef.current);
 
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current); //### mais quel component ? car useWords est un hook =/= component?
     }
-  }, [isPlaying, addWord, addWordIntervalRef.current]);
+  }, [isPlaying, isPaused, addWord, addWordIntervalRef.current]);
 
   useEffect(() => {
     let interval : NodeJS.Timeout | null;
@@ -115,5 +124,5 @@ export const useWords = (isPlaying: boolean, isPaused: boolean) => {
       word.id === id ? { ...word, y } : word
     )), [setWords]);
 
-  return { words, highlightedWord, removeWord, updateWordPosition, setWords };
+  return { words, highlightedWord, removeWord, updateWordPosition, setWords, resetWordIntervalRef };
 };

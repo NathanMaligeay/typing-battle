@@ -4,7 +4,8 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import Word from '@/components/word';
 import Meteor from '@/components/meteor';
 import Healthbar from '@/components/healthbar';
-import FillableWord from '@/components/fillableword';
+//import FillableWord from '@/components/fillableword';
+import Fillbar from '@/components/fillbar';
 import ScoreBox from '@/components/scorebox';
 import TextTypedBox from '@/components/texttypedbox';
 import { useWords } from '@/hooks/useWords';
@@ -18,26 +19,26 @@ import "../styles/main.css";
 const Main: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const { words, highlightedWord, removeWord, updateWordPosition, setWords } = useWords(isPlaying, isPaused);
+  const { words, highlightedWord, removeWord, updateWordPosition, setWords, resetWordIntervalRef } = useWords(isPlaying, isPaused);
   const { meteors, removeMeteor } = useMeteors();
-  const { textTyped, resetTextTyped } = useKeyboardInput(isPlaying, highlightedWord);
+  const { textTyped, resetTextTyped, setTextTyped } = useKeyboardInput(isPlaying, highlightedWord, isPaused);
   const { health, takeDamage, resetHealth } = useHealth();
   const { updateCombo, resetCombo, addWordScore, resetScore, score, hiScore, addPointScore } = useScore(isPlaying, isPaused);
-  const { freezeScoreRef, nukeScoreRef, addScoreAction, resetScoreAction } = useAction(setWords, isPlaying, addPointScore);
+  const { freezeScoreRef, nukeScoreRef, addScoreAction, resetScoreAction } = useAction(setWords, setTextTyped, isPlaying, addPointScore);
 
   const togglePlaying = () => {
     setIsPlaying(prev => !prev);
+    setIsPaused(false);
     resetTextTyped();
     resetHealth();
     resetScore();
     resetScoreAction();
+    resetWordIntervalRef();
   }
 
   const togglePausing = () => {
     setIsPaused((prev) => !prev);
   }
-
-  console.log(isPaused)
 
   const handleWordReachBottom = useCallback((wordId: string) => {
     if (highlightedWord?.id === wordId) {
@@ -75,6 +76,12 @@ const Main: React.FC = () => {
               PLAY
             </button>
           }
+          {isPaused ? <div className='pauseDiv'>
+            <button className="resumeButton" onClick={togglePausing}>
+            RESUME
+            </button>
+          </div>
+            : null}
           {words.map((word) => (
             <Word
               key={word.id}
@@ -82,6 +89,7 @@ const Main: React.FC = () => {
               isHighlighted={word.id === highlightedWord?.id}
               onPositionUpdate={updateWordPosition}
               onReachBottom={handleWordReachBottom}
+              isPaused={isPaused}
             />
           ))}
           {meteors.map((meteor) => (
@@ -93,7 +101,6 @@ const Main: React.FC = () => {
           ))}
           <img className='spaceBeagle' src='space_beaglev2.png'></img>
         </div>
-
         <TextTypedBox isPlaying={isPlaying} textTyped={textTyped} highlightedWordText={highlightedWord?.text || ''} />
       </div>
       <div className='rightPanel'>
@@ -101,24 +108,18 @@ const Main: React.FC = () => {
         <ScoreBox currentScore={score} highScore={hiScore} isPlaying={isPlaying} />
         <div className='verticalPanel'>
           <Healthbar health={health} isPlaying={isPlaying} />
-          <FillableWord text='NUKE' color='orange' percentage={nukeScoreRef.current} isPlaying={isPlaying} actionScore={nukeScoreRef.current} keyToPress='1' />
-          <FillableWord text='FREEZE' color='cornflowerblue' percentage={freezeScoreRef.current} isPlaying={isPlaying} actionScore={freezeScoreRef.current} keyToPress='2' />
+          <Fillbar isPlaying={isPlaying} value={nukeScoreRef.current} text='NUKE' textColor='rgb(255, 69, 0)' insideColor='rgb(255, 215, 0)' keyToPress='1' />
+          <Fillbar isPlaying={isPlaying} value={freezeScoreRef.current} text='FREEZE' textColor='aqua' insideColor='white' keyToPress='2' />
+          {/* <FillableWord text='NUKE' color='orange' percentage={nukeScoreRef.current} isPlaying={isPlaying} actionScore={nukeScoreRef.current} keyToPress='1' />
+          <FillableWord text='FREEZE' color='cornflowerblue' percentage={freezeScoreRef.current} isPlaying={isPlaying} actionScore={freezeScoreRef.current} keyToPress='2' /> */}
         </div>
         {isPlaying ?
-          <button className="pauseButton" onClick={togglePausing}>
-            PAUSE
+            <button className="rightPanelButton" onClick={isPaused ? togglePlaying : togglePausing}>
+            {isPaused ? 'STOP' : 'PAUSE'}
           </button>
           : null
-        }
-        {isPlaying ?
-          <button className="endButton" onClick={togglePlaying}>
-            STOP
-          </button>
-          : null
-        }
+      }
       </div>
-
-
     </div>
 
   );

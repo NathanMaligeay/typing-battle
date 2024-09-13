@@ -15,6 +15,7 @@ const Healthbar: React.FC<HealthbarProps> = ({ health, isPlaying }) => {
 
     const healthBarStyle: React.CSSProperties = {
         fontFamily: 'silkscreen',
+        fontSize: '18px',
         height: '100%',
         overflow: 'hidden',
         display: 'flex',

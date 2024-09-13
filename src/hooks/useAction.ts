@@ -1,17 +1,17 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Word } from './useWords';
 
-export const useAction = (setWords: (updater: (prevWords: Word[]) => Word[]) => void,  isPlaying: boolean, addPointScore: (points: number) => void) => {
+export const useAction = (setWords: (updater: (prevWords: Word[]) => Word[]) => void, setTextTyped: (updater: (prevText: string) => string) => void,  isPlaying: boolean, addPointScore: (points: number) => void) => {
     const freezeScoreRef = useRef<number>(0); //si j'utilise un usestate, ça ne fonctionne pas bien --> comprendre pq
     const nukeScoreRef = useRef<number>(0);
 
 
     const addScoreAction = useCallback(() => {
         if (freezeScoreRef.current < 100) {
-            freezeScoreRef.current = freezeScoreRef.current + 50;
+            freezeScoreRef.current = freezeScoreRef.current + 0.75;
         }
         if (nukeScoreRef.current < 100) {
-            nukeScoreRef.current = nukeScoreRef.current + 10;
+            nukeScoreRef.current = nukeScoreRef.current + 1.25;
         };
     }, [])
 
@@ -22,6 +22,7 @@ export const useAction = (setWords: (updater: (prevWords: Word[]) => Word[]) => 
 
     const nukeAction = useCallback(() => {
         setWords(() => []);
+        setTextTyped(() => '');
         addPointScore(5000);
     }, [setWords, addPointScore]);
 
@@ -46,11 +47,11 @@ export const useAction = (setWords: (updater: (prevWords: Word[]) => Word[]) => 
 
     const handleKeyDownAction = useCallback((e: KeyboardEvent) => {
         if (!isPlaying) return;
-        if (e.key === '1' && nukeScoreRef.current == 100) {
+        if (e.key === '1' && nukeScoreRef.current >= 100) {
             nukeAction();
             nukeScoreRef.current = 0;
         }
-        if (e.key === '2' && freezeScoreRef.current == 100) {
+        if (e.key === '2' && freezeScoreRef.current >= 100) {
             freezeAction();
             freezeScoreRef.current = 0;
         }

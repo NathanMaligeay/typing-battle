@@ -9,12 +9,18 @@ html {
   background-position:unset;
 }
 
+button:hover {
+  background-color: yellow;
+  color: black;
+
+}
+
 .word {
   font-family: 'silkscreen';
 }
 
 .HUDbox {
-  position: relative; /* Add this if it's not already present */
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -26,9 +32,16 @@ html {
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* Center horizontally if needed */
   gap: 10px;
-  /* Space between playBox and newDiv */
+}
+
+.pauseDiv {
+  display: flex;
+  position: absolute;
+  background-color: rgba(20, 1, 31, 0.986);
+  width:100%;
+  height:100%;
+  z-index: 3;
 }
 
 .playButton {
@@ -49,7 +62,34 @@ html {
   z-index: 1000;
 }
 
-.endButton,.pauseButton {
+.rightPanelButton {
+  font-family: 'silkscreen';
+  font-size: 30px;
+  height: 50px;
+  width: 150px;
+  margin: auto;
+  margin-top: 40px;
+  overflow: hidden;
+  border: solid yellow 5px;
+  border-radius: 10px;
+  background-color: rgb(8, 0, 12);
+  color: yellow;
+}
+
+.pauseButton {
+  font-family: 'silkscreen';
+  font-size: 30px;
+  height: 50px;
+  width: 150px;
+  margin: auto;
+  overflow: hidden;
+  border: solid yellow 5px;
+  border-radius: 10px;
+  background-color: rgb(8, 0, 12);
+  color: yellow;
+}
+
+.resumeButton {
   font-family: 'silkscreen';
   font-size: 30px;
   height: 50px;
@@ -75,9 +115,7 @@ html {
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* Center the boxes horizontally */
   gap: 10px;
-  /* Add spacing between userBox, scoreBox, and buttonPanel */
 }
 
 .userBox,
@@ -93,7 +131,6 @@ html {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* Center text inside boxes */
 }
 
 .verticalPanel {
@@ -132,9 +169,7 @@ html {
   position: absolute;
   width: 100%;
   height: 100%;
-  /* Adjust height as needed */
   overflow: hidden;
-  /* Hide the meteor when it moves outside the container */
 }
 
 .meteor {
