@@ -8,10 +8,10 @@ export const useAction = (setWords: (updater: (prevWords: Word[]) => Word[]) => 
 
     const addScoreAction = useCallback(() => {
         if (freezeScoreRef.current < 100) {
-            freezeScoreRef.current = freezeScoreRef.current + 0.75;
+            freezeScoreRef.current = freezeScoreRef.current + 10;
         }
         if (nukeScoreRef.current < 100) {
-            nukeScoreRef.current = nukeScoreRef.current + 1.25;
+            nukeScoreRef.current = nukeScoreRef.current + 10;
         };
     }, [])
 

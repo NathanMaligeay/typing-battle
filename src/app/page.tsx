@@ -8,6 +8,8 @@ import Healthbar from '@/components/healthbar';
 import Fillbar from '@/components/fillbar';
 import ScoreBox from '@/components/scorebox';
 import TextTypedBox from '@/components/texttypedbox';
+import Modal from '@/components/modal';
+
 import { useWords } from '@/hooks/useWords';
 import { useMeteors } from '@/hooks/useMeteors';
 import { useKeyboardInput } from '@/hooks/useKeyboardInput';
@@ -15,10 +17,15 @@ import { useHealth } from '@/hooks/useHealth';
 import { useScore } from '@/hooks/useScore';
 import { useAction } from '@/hooks/useAction';
 import "../styles/main.css";
+import RegisterForm from '@/components/registerform';
+import LoginForm from '@/components/loginform';
+import { registerUser, loginUser } from '@/utils/api';
 
 const Main: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(true);
   const { words, highlightedWord, removeWord, updateWordPosition, setWords, resetWordIntervalRef } = useWords(isPlaying, isPaused);
   const { meteors, removeMeteor } = useMeteors();
   const { textTyped, resetTextTyped, setTextTyped } = useKeyboardInput(isPlaying, highlightedWord, isPaused);
@@ -67,6 +74,29 @@ const Main: React.FC = () => {
     }
   }, [health, togglePlaying])
 
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
+  const handleRegister = async (username: string, password: string) => {
+    try {
+      await registerUser(username, password);
+      alert('Registration successful!');
+      closeModal();
+    } catch (error) {
+      if (error instanceof Error) alert(`Error: ${error.message}`);
+    }
+  };
+
+  const handleLogin = async (username: string, password: string) => {
+    try {
+      await loginUser(username, password);
+      alert('Login successful!');
+      closeModal();
+    } catch (error) {
+      if (error instanceof Error) alert(`Error: ${error.message}`);
+    }
+  };
+
   return (
     <div className='HUDbox'>
       <div className='leftPanel'>
@@ -104,7 +134,9 @@ const Main: React.FC = () => {
         <TextTypedBox isPlaying={isPlaying} textTyped={textTyped} highlightedWordText={highlightedWord?.text || ''} />
       </div>
       <div className='rightPanel'>
-        <div className='userBox'>im user</div>
+        <div className='userBox'>
+          <button onClick={openModal}>Login / Register</button>
+        </div>
         <ScoreBox currentScore={score} highScore={hiScore} isPlaying={isPlaying} />
         <div className='verticalPanel'>
           <Healthbar health={health} isPlaying={isPlaying} />
@@ -120,6 +152,13 @@ const Main: React.FC = () => {
           : null
       }
       </div>
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+      {isRegistering ? (
+        <RegisterForm onSubmit={handleRegister} onSwitch={() => setIsRegistering(false)} />
+      ) : (
+        <LoginForm onSubmit={handleLogin} onSwitch={() => setIsRegistering(true)} />
+      )}
+      </Modal>
     </div>
 
   );
