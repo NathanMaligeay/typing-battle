@@ -1,6 +1,5 @@
 // components/Modal.tsx
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 interface ModalProps {
   isOpen: boolean;
@@ -11,14 +10,22 @@ interface ModalProps {
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
 
-  return ReactDOM.createPortal(
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close-button" onClick={onClose}>X</button>
+  const buttonStyle: React.CSSProperties = {
+    backgroundColor: 'transparent',
+    color: 'yellow',
+    fontFamily: 'silkscreen',
+    border: 'none',
+};
+
+  return (
+    <div className='modal'>
+    <div onClick={onClose}>
+      <div onClick={(e) => e.stopPropagation()}>
+        <button style={buttonStyle} onClick={onClose}>X</button>
         {children}
       </div>
-    </div>,
-    document.body
+    </div>
+    </div>
   );
 };
 

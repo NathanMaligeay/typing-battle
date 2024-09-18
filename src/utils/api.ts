@@ -5,13 +5,15 @@ export const registerUser = async (username: string, password: string) => {
   const response = await fetch(`${BASE_URL}/users`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password}),
+    body: JSON.stringify({ username, password }),
   });
 
   if (!response.ok) {
     const errorText = await response.text();
     throw new Error(errorText);
   }
+
+  return response.json();
 };
 
 export const loginUser = async (username: string, password: string) => {
@@ -25,4 +27,25 @@ export const loginUser = async (username: string, password: string) => {
     const errorText = await response.text();
     throw new Error(errorText);
   }
+
+  return response.json();
 };
+
+export const getNumberGames = async (username: string | null) => {
+  try {
+    const response = await fetch(`${BASE_URL}/games/user?username=${encodeURIComponent(username || '')}`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    if (error instanceof Error) throw new Error(`Failed to fetch game count: ${error.message}`);
+  }
+}

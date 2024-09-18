@@ -1,6 +1,12 @@
 "use client";
 
+//css
+import "../styles/main.css";
+
+//libs
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+
+//components
 import Word from '@/components/word';
 import Meteor from '@/components/meteor';
 import Healthbar from '@/components/healthbar';
@@ -9,23 +15,26 @@ import Fillbar from '@/components/fillbar';
 import ScoreBox from '@/components/scorebox';
 import TextTypedBox from '@/components/texttypedbox';
 import Modal from '@/components/modal';
+import ExpandingBox from '@/components/expandingbox';
+import LoginRegisterForm from '@/components/loginregisterform';
 
+//custom hooks
 import { useWords } from '@/hooks/useWords';
 import { useMeteors } from '@/hooks/useMeteors';
 import { useKeyboardInput } from '@/hooks/useKeyboardInput';
 import { useHealth } from '@/hooks/useHealth';
 import { useScore } from '@/hooks/useScore';
 import { useAction } from '@/hooks/useAction';
-import "../styles/main.css";
-import RegisterForm from '@/components/registerform';
-import LoginForm from '@/components/loginform';
+
+//utils
 import { registerUser, loginUser } from '@/utils/api';
 
 const Main: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isRegistering, setIsRegistering] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
+  const [username, setUsername] = useState<string | null>(null);
   const { words, highlightedWord, removeWord, updateWordPosition, setWords, resetWordIntervalRef } = useWords(isPlaying, isPaused);
   const { meteors, removeMeteor } = useMeteors();
   const { textTyped, resetTextTyped, setTextTyped } = useKeyboardInput(isPlaying, highlightedWord, isPaused);
@@ -74,13 +83,24 @@ const Main: React.FC = () => {
     }
   }, [health, togglePlaying])
 
-  const openModal = () => setIsModalOpen(true);
+  const toggleModal = () => {
+    setIsModalOpen((prev) => !prev);
+    if(isPlaying && !isPaused) togglePausing();
+
+  }
   const closeModal = () => setIsModalOpen(false);
 
   const handleRegister = async (username: string, password: string) => {
     try {
-      await registerUser(username, password);
-      alert('Registration successful!');
+      const response = await registerUser(username, password);
+      const {registration, message, username : registeredUsername} = response;
+      if (registration) {
+        alert(message);
+        setIsLogin(true);
+        setUsername(registeredUsername);
+      } else {
+        alert(message);
+      }
       closeModal();
     } catch (error) {
       if (error instanceof Error) alert(`Error: ${error.message}`);
@@ -89,9 +109,17 @@ const Main: React.FC = () => {
 
   const handleLogin = async (username: string, password: string) => {
     try {
-      await loginUser(username, password);
-      alert('Login successful!');
-      closeModal();
+      const response = await loginUser(username, password);
+      const { login, message, username: loggedInUsername } = response;
+
+      if (login) {
+        setIsLogin(true);
+        setUsername(loggedInUsername);
+        alert(message);
+        closeModal();
+      } else {
+        alert(message);
+      }
     } catch (error) {
       if (error instanceof Error) alert(`Error: ${error.message}`);
     }
@@ -130,13 +158,16 @@ const Main: React.FC = () => {
             />
           ))}
           <img className='spaceBeagle' src='space_beaglev2.png'></img>
+          <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <LoginRegisterForm onLogin={handleLogin} onRegister={handleRegister} />
+      </Modal>
         </div>
         <TextTypedBox isPlaying={isPlaying} textTyped={textTyped} highlightedWordText={highlightedWord?.text || ''} />
       </div>
       <div className='rightPanel'>
-        <div className='userBox'>
-          <button onClick={openModal}>Login / Register</button>
-        </div>
+        
+          {isLogin ? <ExpandingBox username={username}/> : <button className ='loginregisterbutton' onClick={toggleModal}>Login / Register</button>}
+        
         <ScoreBox currentScore={score} highScore={hiScore} isPlaying={isPlaying} />
         <div className='verticalPanel'>
           <Healthbar health={health} isPlaying={isPlaying} />
@@ -152,13 +183,6 @@ const Main: React.FC = () => {
           : null
       }
       </div>
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
-      {isRegistering ? (
-        <RegisterForm onSubmit={handleRegister} onSwitch={() => setIsRegistering(false)} />
-      ) : (
-        <LoginForm onSubmit={handleLogin} onSwitch={() => setIsRegistering(true)} />
-      )}
-      </Modal>
     </div>
 
   );

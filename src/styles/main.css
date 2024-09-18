@@ -12,6 +12,7 @@ html {
 button:hover {
   background-color: yellow;
   color: black;
+  cursor: pointer;
 
 }
 
@@ -59,7 +60,7 @@ button:hover {
   background-color: rgb(8, 0, 12);
   color: yellow;
   transform: translateX(-75px);
-  z-index: 1000;
+  z-index: 999;
 }
 
 .rightPanelButton {
@@ -176,3 +177,82 @@ button:hover {
   position: absolute;
   transform: translateY(-50%);
 }
+
+.loginregisterbutton {
+  font-family: 'silkscreen';
+  font-size: 15px;
+  height: 50px;
+  width: 210px;
+  overflow: hidden;
+  border: solid yellow 5px;
+  border-radius: 10px;
+  background-color: rgb(8, 0, 12);
+  color: yellow;
+}
+
+.modal {
+  position: relative;
+  width: fit-content;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(8, 0, 12);
+  border: solid yellow 5px;
+  border-radius: 10px;
+  z-index: 1000;
+
+}
+
+.loginregister {
+  font-family: 'silkscreen';
+  font-size: 15px;
+  color: yellow;
+}
+
+input[type="text"],
+input[type="password"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+    margin-bottom: 15px; /* Add space between fields */
+}
+
+button[type="submit"] {
+  font-family: 'silkscreen';
+  font-size: 30px;
+  height: 50px;
+  width: 150px;
+  margin: auto;
+  overflow: hidden;
+  border: solid yellow 5px;
+  border-radius: 10px;
+  background-color: rgb(8, 0, 12);
+  color: yellow;
+}
+
+.box {
+  width: 200px;
+  height: 50px;
+  background-color: rgb(19, 3, 26);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: yellow;
+  font-family: 'silkscreen';
+  cursor: pointer;
+  transition: width 0.5s ease, height 0.5s ease;
+  border: 5px solid yellow;
+  border-radius: 10px;
+  text-align: center;
+  user-select: none;
+}
+
+.box.expanded {
+  width: 200px;
+  height: 400px;
+}
+
