@@ -27,7 +27,7 @@ export const useScore = (isPlaying: boolean, isPaused: boolean) => {
         if (score > hiScore) {
             setHiScore(score);
         }
-    }, [score]);
+    }, [score, hiScore]);
 
     const resetScore = useCallback(() => setScore(0),[]);
     const updateCombo = useCallback(() => comboRef.current = comboRef.current + 1,[]);

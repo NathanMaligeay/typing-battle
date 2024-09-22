@@ -4,7 +4,7 @@
 import "../styles/main.css";
 
 //libs
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 
 //components
 import Word from '@/components/word';
@@ -27,22 +27,24 @@ import { useScore } from '@/hooks/useScore';
 import { useAction } from '@/hooks/useAction';
 
 //utils
-import { registerUser, loginUser } from '@/utils/api';
+import { registerUser, loginUser, sendEndGameInfo } from '@/utils/api';
 
 const Main: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
+  const wordsTyped = useRef<number>(0) as React.MutableRefObject<number>;
   const [username, setUsername] = useState<string | null>(null);
   const { words, highlightedWord, removeWord, updateWordPosition, setWords, resetWordIntervalRef } = useWords(isPlaying, isPaused);
   const { meteors, removeMeteor } = useMeteors();
   const { textTyped, resetTextTyped, setTextTyped } = useKeyboardInput(isPlaying, highlightedWord, isPaused);
   const { health, takeDamage, resetHealth } = useHealth();
   const { updateCombo, resetCombo, addWordScore, resetScore, score, hiScore, addPointScore } = useScore(isPlaying, isPaused);
-  const { freezeScoreRef, nukeScoreRef, addScoreAction, resetScoreAction } = useAction(setWords, setTextTyped, isPlaying, addPointScore);
+  const { freezeScoreRef, nukeScoreRef, addScoreAction, resetScoreAction } = useAction(setWords, setTextTyped, isPlaying, addPointScore, words, wordsTyped);
+  
 
-  const togglePlaying = () => {
+  const togglePlaying = useCallback(() => {
     setIsPlaying(prev => !prev);
     setIsPaused(false);
     resetTextTyped();
@@ -50,7 +52,9 @@ const Main: React.FC = () => {
     resetScore();
     resetScoreAction();
     resetWordIntervalRef();
-  }
+    wordsTyped.current = 0;
+    
+  }, [setIsPlaying, setIsPaused, resetTextTyped, resetHealth, resetScore, resetScoreAction, resetWordIntervalRef, wordsTyped])
 
   const togglePausing = () => {
     setIsPaused((prev) => !prev);
@@ -60,11 +64,10 @@ const Main: React.FC = () => {
     if (highlightedWord?.id === wordId) {
       resetTextTyped();
     }
-
     resetCombo();
     removeWord(wordId);
     takeDamage();
-  }, [removeWord, resetTextTyped, takeDamage, highlightedWord]);
+  }, [removeWord, resetTextTyped, takeDamage, resetCombo, highlightedWord]);
 
   useEffect(() => {
     if (highlightedWord && textTyped === highlightedWord.text) {
@@ -73,19 +76,32 @@ const Main: React.FC = () => {
       updateCombo();
       addWordScore(highlightedWord.text);
       addScoreAction();
+      wordsTyped.current = wordsTyped.current + 1;
     }
-  }, [textTyped, highlightedWord, removeWord, resetTextTyped]);
+  }, [textTyped, highlightedWord, removeWord, resetTextTyped, updateCombo, addWordScore, addScoreAction]);
+
+
 
   useEffect(() => {
+    const handleEndGame = async () => {
+      try {
+        await sendEndGameInfo(username, wordsTyped.current);
+      } catch (error) {
+        if (error instanceof Error) alert(`Error: ${error.message}`);
+      }
+    }
     if (health === 0) {
       alert('L');
+      if (username) {
+        handleEndGame();
+      }
       togglePlaying();
     }
-  }, [health, togglePlaying])
+  }, [health, togglePlaying, username])
 
   const toggleModal = () => {
     setIsModalOpen((prev) => !prev);
-    if(isPlaying && !isPaused) togglePausing();
+    if (isPlaying && !isPaused) togglePausing();
 
   }
   const closeModal = () => setIsModalOpen(false);
@@ -93,7 +109,7 @@ const Main: React.FC = () => {
   const handleRegister = async (username: string, password: string) => {
     try {
       const response = await registerUser(username, password);
-      const {registration, message, username : registeredUsername} = response;
+      const { registration, message, username: registeredUsername } = response;
       if (registration) {
         alert(message);
         setIsLogin(true);
@@ -136,7 +152,7 @@ const Main: React.FC = () => {
           }
           {isPaused ? <div className='pauseDiv'>
             <button className="resumeButton" onClick={togglePausing}>
-            RESUME
+              RESUME
             </button>
           </div>
             : null}
@@ -159,15 +175,15 @@ const Main: React.FC = () => {
           ))}
           <img className='spaceBeagle' src='space_beaglev2.png'></img>
           <Modal isOpen={isModalOpen} onClose={closeModal}>
-        <LoginRegisterForm onLogin={handleLogin} onRegister={handleRegister} />
-      </Modal>
+            <LoginRegisterForm onLogin={handleLogin} onRegister={handleRegister} />
+          </Modal>
         </div>
         <TextTypedBox isPlaying={isPlaying} textTyped={textTyped} highlightedWordText={highlightedWord?.text || ''} />
       </div>
       <div className='rightPanel'>
-        
-          {isLogin ? <ExpandingBox username={username}/> : <button className ='loginregisterbutton' onClick={toggleModal}>Login / Register</button>}
-        
+
+        {isLogin ? <ExpandingBox username={username} /> : <button className='loginregisterbutton' onClick={toggleModal}>Login / Register</button>}
+
         <ScoreBox currentScore={score} highScore={hiScore} isPlaying={isPlaying} />
         <div className='verticalPanel'>
           <Healthbar health={health} isPlaying={isPlaying} />
@@ -177,11 +193,11 @@ const Main: React.FC = () => {
           <FillableWord text='FREEZE' color='cornflowerblue' percentage={freezeScoreRef.current} isPlaying={isPlaying} actionScore={freezeScoreRef.current} keyToPress='2' /> */}
         </div>
         {isPlaying ?
-            <button className="rightPanelButton" onClick={isPaused ? togglePlaying : togglePausing}>
+          <button className="rightPanelButton" onClick={isPaused ? togglePlaying : togglePausing}>
             {isPaused ? 'STOP' : 'PAUSE'}
           </button>
           : null
-      }
+        }
       </div>
     </div>
 
