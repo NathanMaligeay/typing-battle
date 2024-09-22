@@ -118,6 +118,20 @@ app.get('/games/all/user', async (req, res) => {
     }
 })
 
+app.post('/games/user', async (req, res) => {
+    const {username, wordsTyped} = req.body;
+    if (!username) return res.status(400).send('User is required');
+    try {
+        const result = await pool.query('SELECT user_id FROM users WHERE username = $1', [username]);
+        const user_id = result.rows[0].user_id;
+        await pool.query('INSERT INTO games (user_id, words_typed) VALUES ($1, $2)', [user_id, wordsTyped]);
+        return res.json({message: 'Game info sucessfully posted'});
+    } catch (error) {
+        console.error('Error posting game info', error);
+        res.status(500).send('Server error');
+    }
+})
+
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
