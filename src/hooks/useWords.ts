@@ -55,7 +55,7 @@ export const useWords = (isPlaying: boolean, isPaused: boolean) => {
     if (!highlightedWord || !words.find(word => word.id === highlightedWord.id)) { 
       setHighlightedWord(newHighlightedWord);
     }
-  }, [words, highlightedWord, isPlaying]);
+  }, [words, highlightedWord, isPlaying, setHighlightedWord]);
   // ### ici je comprend pas pq on a besoin de words pour que ça fonctionne qd on tape le mot (je comprends pr le cas où ça sort de l'écran)
   
   useEffect(() => {
@@ -75,7 +75,7 @@ export const useWords = (isPlaying: boolean, isPaused: boolean) => {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current); //### mais quel component ? car useWords est un hook =/= component?
     }
-  }, [isPlaying, isPaused, addWord, addWordIntervalRef.current]);
+  }, [isPlaying, isPaused, addWord]);
 
   useEffect(() => {
     let interval : NodeJS.Timeout | null;

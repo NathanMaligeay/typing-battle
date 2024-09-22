@@ -1,9 +1,9 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { Word } from './useWords';
 
 export const useKeyboardInput = (isPlaying: boolean, highlightedWord: Word | null, isPaused: boolean) => {
   const [textTyped, setTextTyped] = useState('');
-
+  
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (!isPlaying) return;
     if (isPaused) return;
@@ -19,6 +19,7 @@ export const useKeyboardInput = (isPlaying: boolean, highlightedWord: Word | nul
 
       return prev;
     });
+
   }, [isPlaying, highlightedWord, textTyped, isPaused]);
 
   useEffect(() => {

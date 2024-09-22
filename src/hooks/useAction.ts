@@ -1,7 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Word } from './useWords';
 
-export const useAction = (setWords: (updater: (prevWords: Word[]) => Word[]) => void, setTextTyped: (updater: (prevText: string) => string) => void,  isPlaying: boolean, addPointScore: (points: number) => void) => {
+export const useAction = (setWords: (updater: (prevWords: Word[]) => Word[]) => void,
+    setTextTyped: (updater: (prevText: string) => string) => void,
+    isPlaying: boolean, addPointScore: (points: number) => void,
+    words: Word[],
+    wordsTypedRef: React.MutableRefObject<number>
+) => {
     const freezeScoreRef = useRef<number>(0); //si j'utilise un usestate, ça ne fonctionne pas bien --> comprendre pq
     const nukeScoreRef = useRef<number>(0);
 
@@ -18,16 +23,18 @@ export const useAction = (setWords: (updater: (prevWords: Word[]) => Word[]) => 
     const resetScoreAction = useCallback(() => {
         freezeScoreRef.current = 0;
         nukeScoreRef.current = 0;
-    },[]);
+    }, []);
 
     const nukeAction = useCallback(() => {
+        const wordsNuked = words.length;
+        wordsTypedRef.current = (wordsTypedRef.current || 0) + wordsNuked;
         setWords(() => []);
         setTextTyped(() => '');
         addPointScore(5000);
-    }, [setWords, addPointScore]);
+    }, [setWords, addPointScore, setTextTyped, wordsTypedRef, words]);
 
     const freezeAction = useCallback(() => {
-        setWords((prevWords) => 
+        setWords((prevWords) =>
             prevWords.map((word) => ({
                 ...word,
                 wordIsPaused: true,
@@ -35,13 +42,13 @@ export const useAction = (setWords: (updater: (prevWords: Word[]) => Word[]) => 
         );
 
         setTimeout(() => {
-            setWords((prevWords) => 
+            setWords((prevWords) =>
                 prevWords.map((word) => ({
                     ...word,
                     wordIsPaused: false,
                 }))
             )
-        },5000);
+        }, 5000);
         addPointScore(5000);
     }, [setWords, addPointScore])
 
@@ -60,7 +67,7 @@ export const useAction = (setWords: (updater: (prevWords: Word[]) => Word[]) => 
     useEffect(() => {
         document.addEventListener('keydown', handleKeyDownAction);
         return () => document.removeEventListener('keydown', handleKeyDownAction);
-      }, [handleKeyDownAction]);
+    }, [handleKeyDownAction]);
 
     return { freezeScoreRef, nukeScoreRef, addScoreAction, resetScoreAction };
 

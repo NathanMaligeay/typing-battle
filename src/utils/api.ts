@@ -31,6 +31,21 @@ export const loginUser = async (username: string, password: string) => {
   return response.json();
 };
 
+export const sendEndGameInfo = async (username: string | null, wordsTyped: number) => {
+  const response = await fetch(`${BASE_URL}/games/user`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, wordsTyped }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(errorText);
+  }
+
+  return response.json();
+}
+
 export const getNumberGames = async (username: string | null) => {
   try {
     const response = await fetch(`${BASE_URL}/games/user?username=${encodeURIComponent(username || '')}`, {
