@@ -31,11 +31,11 @@ export const loginUser = async (username: string, password: string) => {
   return response.json();
 };
 
-export const sendEndGameInfo = async (username: string | null, wordsTyped: number) => {
+export const sendEndGameInfo = async (username: string | null, wordsTyped: number, accuracy: number) => {
   const response = await fetch(`${BASE_URL}/games/user`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, wordsTyped }),
+    body: JSON.stringify({ username, wordsTyped, accuracy }),
   });
 
   if (!response.ok) {

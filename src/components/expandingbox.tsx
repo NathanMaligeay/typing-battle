@@ -3,9 +3,10 @@ import { getNumberGames } from '@/utils/api';
 
 interface ExpandingBoxProps {
     username: string | null;
+    handleLogout: () => void;
 }
 
-const ExpandingBox: React.FC<ExpandingBoxProps> = ({username}) => {
+const ExpandingBox: React.FC<ExpandingBoxProps> = ({username, handleLogout}) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [gameCount, setGameCount] = useState<number | null>(null);
   const [totalWordsTyped, setTotalWordsTyped] = useState<number | null>(0);
@@ -46,6 +47,10 @@ const ExpandingBox: React.FC<ExpandingBoxProps> = ({username}) => {
         <div>Number of games played : {gameCount}</div>
         <div>Total number of words typed : {totalWordsTyped}</div>
         <div>Avg. number of words typed : {meanWordsTyped}</div>
+        <div>
+          <button onClick={handleLogout} className="logoutButton">Logout</button>
+          <button className="logoutButton">View games</button>
+        </div>
         </div> 
         : 
         <div>Connected as {username}</div>}
