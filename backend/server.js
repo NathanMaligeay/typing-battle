@@ -86,13 +86,14 @@ app.get('/games/user', async (req, res) => {
     }
 })
 
+//Route to post game info for a user
 app.post('/games/user', async (req, res) => {
-    const {username, wordsTyped} = req.body;
+    const {username, wordsTyped, accuracy} = req.body;
     if (!username) return res.status(400).send('User is required');
     try {
         const result = await pool.query('SELECT user_id FROM users WHERE username = $1', [username]);
         const user_id = result.rows[0].user_id;
-        await pool.query('INSERT INTO games (user_id, words_typed) VALUES ($1, $2)', [user_id, wordsTyped]);
+        await pool.query('INSERT INTO games (user_id, words_typed, accuracy) VALUES ($1, $2, $3)', [user_id, wordsTyped, accuracy]);
         return res.json({message: 'Game info sucessfully posted'});
     } catch (error) {
         console.error('Error posting game info', error);
