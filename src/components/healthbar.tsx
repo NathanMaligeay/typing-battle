@@ -7,7 +7,7 @@ const Healthbar: React.FC<HealthbarProps> = ({ health, isPlaying }) => {
 
     const healthBarContainerStyle: React.CSSProperties = {
         height: '300px',
-        width: '40px',
+        width: '50px',
         borderRadius: '10px',
         border: '5px solid yellow',
         overflow: 'hidden',

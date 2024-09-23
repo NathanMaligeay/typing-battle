@@ -35,10 +35,11 @@ const Main: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const wordsTyped = useRef<number>(0) as React.MutableRefObject<number>;
+  const accuracy = useRef<number>(0) as React.MutableRefObject<number>;
   const [username, setUsername] = useState<string | null>(null);
   const { words, highlightedWord, removeWord, updateWordPosition, setWords, resetWordIntervalRef } = useWords(isPlaying, isPaused);
   const { meteors, removeMeteor } = useMeteors();
-  const { textTyped, resetTextTyped, setTextTyped } = useKeyboardInput(isPlaying, highlightedWord, isPaused);
+  const { textTyped, resetTextTyped, setTextTyped, resetEntireStringTyped, calculateWordAccuracy } = useKeyboardInput(isPlaying, highlightedWord, isPaused);
   const { health, takeDamage, resetHealth } = useHealth();
   const { updateCombo, resetCombo, addWordScore, resetScore, score, hiScore, addPointScore } = useScore(isPlaying, isPaused);
   const { freezeScoreRef, nukeScoreRef, addScoreAction, resetScoreAction } = useAction(setWords, setTextTyped, isPlaying, addPointScore, words, wordsTyped);
@@ -63,6 +64,7 @@ const Main: React.FC = () => {
   const handleWordReachBottom = useCallback((wordId: string) => {
     if (highlightedWord?.id === wordId) {
       resetTextTyped();
+      resetEntireStringTyped();
     }
     resetCombo();
     removeWord(wordId);
@@ -71,8 +73,10 @@ const Main: React.FC = () => {
 
   useEffect(() => {
     if (highlightedWord && textTyped === highlightedWord.text) {
+      accuracy.current = accuracy.current + calculateWordAccuracy();
       removeWord(highlightedWord.id);
       resetTextTyped();
+      resetEntireStringTyped();
       updateCombo();
       addWordScore(highlightedWord.text);
       addScoreAction();
@@ -80,12 +84,12 @@ const Main: React.FC = () => {
     }
   }, [textTyped, highlightedWord, removeWord, resetTextTyped, updateCombo, addWordScore, addScoreAction]);
 
-
+  console.log(accuracy.current);
 
   useEffect(() => {
     const handleEndGame = async () => {
       try {
-        await sendEndGameInfo(username, wordsTyped.current);
+        await sendEndGameInfo(username, wordsTyped.current, (accuracy.current / wordsTyped.current)*100 );
       } catch (error) {
         if (error instanceof Error) alert(`Error: ${error.message}`);
       }
@@ -141,6 +145,11 @@ const Main: React.FC = () => {
     }
   };
 
+  const handleLogout = useCallback(() => {
+    setIsLogin(false);
+    setUsername(null);
+  },[])
+
   return (
     <div className='HUDbox'>
       <div className='leftPanel'>
@@ -182,7 +191,7 @@ const Main: React.FC = () => {
       </div>
       <div className='rightPanel'>
 
-        {isLogin ? <ExpandingBox username={username} /> : <button className='loginregisterbutton' onClick={toggleModal}>Login / Register</button>}
+        {isLogin ? <ExpandingBox username={username} handleLogout={handleLogout} /> : <button className='loginregisterbutton' onClick={toggleModal}>Login / Register</button>}
 
         <ScoreBox currentScore={score} highScore={hiScore} isPlaying={isPlaying} />
         <div className='verticalPanel'>

@@ -13,7 +13,6 @@ button:hover {
   background-color: yellow;
   color: black;
   cursor: pointer;
-
 }
 
 .word {
@@ -77,18 +76,15 @@ button:hover {
   color: yellow;
 }
 
-/* .pauseButton {
-  font-family: 'silkscreen';
-  font-size: 30px;
-  height: 50px;
-  width: 100%;
-  margin: auto;
-  overflow: hidden;
-  border: solid yellow 5px;
-  border-radius: 10px;
+.logoutButton {
+  border: solid yellow 3px;
+  border-radius: 5px;
   background-color: rgb(8, 0, 12);
   color: yellow;
-} */
+  font-family: 'silkscreen';
+  font-size: 15px;
+
+}
 
 .resumeButton {
   font-family: 'silkscreen';
@@ -191,10 +187,20 @@ button:hover {
   color: yellow;
 }
 
+.xButton {
+  background-color: rgb(8, 0, 12);
+  color : yellow;
+  font-family: 'silkscreen';
+  border: none;
+  width: fit-content;
+  border-radius: 0px 4px 0px 5px
+}
+
 .modal {
   position: relative;
   width: fit-content;
   margin: auto;
+  margin-top: 20%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -202,13 +208,14 @@ button:hover {
   border: solid yellow 5px;
   border-radius: 10px;
   z-index: 1000;
-
 }
 
 .loginregister {
   font-family: 'silkscreen';
   font-size: 15px;
   color: yellow;
+  width: 350px;
+  padding: 5px;
 }
 
 input[type="text"],
@@ -216,23 +223,37 @@ input[type="password"],
 textarea {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box; /* Include padding and border in element's total width and height */
     margin-bottom: 15px; /* Add space between fields */
+    color: yellow;
+    background-color: rgb(8, 0, 12);
+    border: yellow solid 3px;
+    font-family: 'silkscreen';
 }
 
 button[type="submit"] {
   font-family: 'silkscreen';
-  font-size: 30px;
-  height: 50px;
+  font-size: 20px;
+  height: 40px;
   width: 150px;
-  margin: auto;
   overflow: hidden;
-  border: solid yellow 5px;
+  border: solid yellow 3px;
   border-radius: 10px;
   background-color: rgb(8, 0, 12);
   color: yellow;
+}
+
+button[type="submit"]:hover {
+  background-color: yellow;
+  color: black;
+  cursor: pointer;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .box {

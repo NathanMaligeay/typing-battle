@@ -11,7 +11,7 @@ const Fillbar: React.FC<FillbarProps> = ({ value, isPlaying, text, textColor, in
 
     const barContainerStyle: React.CSSProperties = {
         height: '300px',
-        width: '40px',
+        width: '50px',
         borderRadius: '10px',
         border: `5px solid ${textColor}`,
         //overflow: 'hidden',
