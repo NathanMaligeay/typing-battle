@@ -113,7 +113,7 @@ button:hover {
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  width: 250px;
+  width: 300px;
 }
 
 .userBox,
@@ -271,10 +271,52 @@ form {
   border-radius: 10px;
   text-align: center;
   user-select: none;
+  font-size: 18px;
+}
+
+.expandedbox {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: space-between; /* Distribute space evenly */
+  height: 100%;
+  width: 100%;
+}
+
+.expandedbox > div {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0; /* Optional for spacing between text and container */
+}
+
+.expandedbox > div:last-child {
+  margin-top: auto; /* Push this element to the bottom */
+  display: flex;
+  justify-content: space-around;
+  padding-bottom: 5px; /* Adjust bottom spacing if needed */
+}
+
+.box:hover {
+  cursor: pointer;
 }
 
 .box.expanded {
   width: 100%;
   height: 360px;
 }
+
+.gameoverbox {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-content: center;
+  padding: 20px;
+  color: yellow;
+  font-family: 'silkscreen';
+  font-size: 20px;
+}
+
 

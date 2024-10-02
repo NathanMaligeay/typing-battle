@@ -17,6 +17,7 @@ import TextTypedBox from '@/components/texttypedbox';
 import Modal from '@/components/modal';
 import ExpandingBox from '@/components/expandingbox';
 import LoginRegisterForm from '@/components/loginregisterform';
+import GameOverBox from "@/components/gameoverbox";
 
 //custom hooks
 import { useWords } from '@/hooks/useWords';
@@ -32,10 +33,14 @@ import { registerUser, loginUser, sendEndGameInfo } from '@/utils/api';
 const Main: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const wordsTyped = useRef<number>(0) as React.MutableRefObject<number>;
   const accuracy = useRef<number>(0) as React.MutableRefObject<number>;
+  const [time, setTime] = useState<number>(0);
+  const [timerActive, setTimerActive] = useState<boolean>(false);
+  const timePlayedIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const [username, setUsername] = useState<string | null>(null);
   const { words, highlightedWord, removeWord, updateWordPosition, setWords, resetWordIntervalRef } = useWords(isPlaying, isPaused);
   const { meteors, removeMeteor } = useMeteors();
@@ -43,22 +48,52 @@ const Main: React.FC = () => {
   const { health, takeDamage, resetHealth } = useHealth();
   const { updateCombo, resetCombo, addWordScore, resetScore, score, hiScore, addPointScore } = useScore(isPlaying, isPaused);
   const { freezeScoreRef, nukeScoreRef, addScoreAction, resetScoreAction } = useAction(setWords, setTextTyped, isPlaying, addPointScore, words, wordsTyped);
-  
+
 
   const togglePlaying = useCallback(() => {
-    setIsPlaying(prev => !prev);
+    setIsPlaying(true);
     setIsPaused(false);
+    setGameOver(false);
     resetTextTyped();
     resetHealth();
     resetScore();
     resetScoreAction();
     resetWordIntervalRef();
+    setTime(0); // reset le timer a 0 pour chaque game
     wordsTyped.current = 0;
-    
-  }, [setIsPlaying, setIsPaused, resetTextTyped, resetHealth, resetScore, resetScoreAction, resetWordIntervalRef, wordsTyped])
+    accuracy.current = 0;
+    setTimerActive(true); //active le timer
+    closeModal();
+  }, [setIsPlaying, setIsPaused, resetTextTyped, resetHealth, resetScore, resetScoreAction, resetWordIntervalRef, setTimerActive])
+
+  const handleGameOver = useCallback(() => {
+    setGameOver(true);
+    setIsPlaying(false);
+    setTimerActive(false);
+  },[setGameOver, setIsPlaying, setTimerActive])
+
+  useEffect(() => {
+    if (timerActive) {
+      timePlayedIntervalRef.current = setInterval(() => {
+        setTime((prevTime) => prevTime + 1);
+      }, 1000) //add 1 to counter each sec
+    } else {
+      if (timePlayedIntervalRef.current) {
+        clearInterval(timePlayedIntervalRef.current);
+        timePlayedIntervalRef.current = null;
+      }
+    }
+
+    return () => {
+      if (timePlayedIntervalRef.current) {
+        clearInterval(timePlayedIntervalRef.current);
+      }
+    }
+  }, [timerActive, setTime])
 
   const togglePausing = () => {
     setIsPaused((prev) => !prev);
+    setTimerActive((prev) => !prev);
   }
 
   const handleWordReachBottom = useCallback((wordId: string) => {
@@ -69,7 +104,7 @@ const Main: React.FC = () => {
     resetCombo();
     removeWord(wordId);
     takeDamage();
-  }, [removeWord, resetTextTyped, takeDamage, resetCombo, highlightedWord]);
+  }, [removeWord, resetTextTyped, takeDamage, resetCombo, highlightedWord, resetEntireStringTyped]);
 
   useEffect(() => {
     if (highlightedWord && textTyped === highlightedWord.text) {
@@ -82,33 +117,36 @@ const Main: React.FC = () => {
       addScoreAction();
       wordsTyped.current = wordsTyped.current + 1;
     }
-  }, [textTyped, highlightedWord, removeWord, resetTextTyped, updateCombo, addWordScore, addScoreAction]);
+  }, [textTyped, highlightedWord, removeWord, resetTextTyped, updateCombo, addWordScore, addScoreAction, calculateWordAccuracy, resetEntireStringTyped]);
 
-  console.log(accuracy.current);
 
   useEffect(() => {
     const handleEndGame = async () => {
       try {
-        await sendEndGameInfo(username, wordsTyped.current, (accuracy.current / wordsTyped.current)*100 );
+        await sendEndGameInfo(username, wordsTyped.current, (accuracy.current / wordsTyped.current) * 100);
       } catch (error) {
         if (error instanceof Error) alert(`Error: ${error.message}`);
       }
     }
     if (health === 0) {
-      alert('L');
       if (username) {
         handleEndGame();
       }
-      togglePlaying();
+      handleGameOver();
     }
-  }, [health, togglePlaying, username])
+  }, [health, username, handleGameOver])
 
   const toggleModal = () => {
     setIsModalOpen((prev) => !prev);
     if (isPlaying && !isPaused) togglePausing();
-
   }
+
   const closeModal = () => setIsModalOpen(false);
+  
+  const closeGameOverModal = () => {
+    setGameOver(false);
+  }
+
 
   const handleRegister = async (username: string, password: string) => {
     try {
@@ -131,7 +169,6 @@ const Main: React.FC = () => {
     try {
       const response = await loginUser(username, password);
       const { login, message, username: loggedInUsername } = response;
-
       if (login) {
         setIsLogin(true);
         setUsername(loggedInUsername);
@@ -148,7 +185,7 @@ const Main: React.FC = () => {
   const handleLogout = useCallback(() => {
     setIsLogin(false);
     setUsername(null);
-  },[])
+  }, [])
 
   return (
     <div className='HUDbox'>
@@ -185,6 +222,9 @@ const Main: React.FC = () => {
           <img className='spaceBeagle' src='space_beaglev2.png'></img>
           <Modal isOpen={isModalOpen} onClose={closeModal}>
             <LoginRegisterForm onLogin={handleLogin} onRegister={handleRegister} />
+          </Modal>
+          <Modal isOpen={gameOver} onClose={closeGameOverModal}>
+            <GameOverBox timePlayed={time} wordsTyped={wordsTyped.current} accuracy={accuracy.current}/>
           </Modal>
         </div>
         <TextTypedBox isPlaying={isPlaying} textTyped={textTyped} highlightedWordText={highlightedWord?.text || ''} />
