@@ -75,11 +75,12 @@ app.get('/games/user', async (req, res) => {
     if (!username) return res.status(400).send('User is required');
 
     try {
-        const result = await pool.query('SELECT COUNT(*) AS count, SUM(games.words_typed) AS total_words_typed, AVG(games.words_typed) as mean_words_typed FROM games JOIN users ON games.user_id = users.user_id WHERE users.username = $1', [username])
+        const result = await pool.query('SELECT COUNT(*) AS count, SUM(games.words_typed) AS total_words_typed, AVG(games.words_typed) as mean_words_typed, AVG(games.accuracy) as mean_accuracy FROM games JOIN users ON games.user_id = users.user_id WHERE users.username = $1', [username])
         const count = result.rows[0].count;
         const total_words_typed = result.rows[0].total_words_typed ? result.rows[0].total_words_typed : 0;
         const mean_words_typed = result.rows[0].mean_words_typed ? parseFloat(result.rows[0].mean_words_typed).toFixed(2) : 0;
-        return res.status(200).json({count, total_words_typed, mean_words_typed});
+        const mean_accuracy = result.rows[0].mean_accuracy ? parseFloat(result.rows[0].mean_accuracy).toFixed(2) : 0
+        return res.status(200).json({count, total_words_typed, mean_words_typed, mean_accuracy});
     } catch (error) {
         console.log(error);
         return res.status(500).json({ error: 'Internal server error' });
@@ -89,6 +90,7 @@ app.get('/games/user', async (req, res) => {
 //Route to post game info for a user
 app.post('/games/user', async (req, res) => {
     const {username, wordsTyped, accuracy} = req.body;
+    console.log(accuracy)
     if (!username) return res.status(400).send('User is required');
     try {
         const result = await pool.query('SELECT user_id FROM users WHERE username = $1', [username]);
