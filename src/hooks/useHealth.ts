@@ -1,3 +1,5 @@
+//not in use anymore, replaced with redux
+
 import { useState, useCallback } from "react";
 
 export const useHealth = () => {

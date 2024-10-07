@@ -3,6 +3,7 @@
   src: url('../fonts/slkscr.ttf') format('truetype'),
 }
 
+
 html {
   background-image: url('../../public/galaxy_background.png');
   background-size: cover;
@@ -67,8 +68,7 @@ button:hover {
   font-size: 30px;
   height: 50px;
   width: 100%;
-  margin: auto;
-  margin-top: 40px;
+  margin-top: 60px;
   overflow: hidden;
   border: solid yellow 5px;
   border-radius: 10px;
@@ -114,9 +114,9 @@ button:hover {
   align-items: center;
   gap: 10px;
   width: 300px;
+  height: 100%;
 }
 
-.userBox,
 .scoreBox {
   width: 100%;
   height: 50px;
@@ -129,16 +129,16 @@ button:hover {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  box-sizing: border-box;
 }
 
 .verticalPanel {
   display: flex;
   flex-direction: row;
   gap: 10px;
-  width: inherit;
+  width: 100%;
   margin-top: 20px;
   justify-content: space-between;
-  
 }
 
 .inputTextDiv {
@@ -179,11 +179,11 @@ button:hover {
   font-family: 'silkscreen';
   font-size: 15px;
   height: 50px;
-  width: 260px;
+  width: 100%;
   overflow: hidden;
-  border: solid yellow 5px;
+  border: 5px solid yellow;
   border-radius: 10px;
-  background-color: rgb(8, 0, 12);
+  background-color: rgb(19, 3, 26);
   color: yellow;
 }
 
@@ -272,13 +272,14 @@ form {
   text-align: center;
   user-select: none;
   font-size: 18px;
+  box-sizing: border-box;
 }
 
 .expandedbox {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  justify-content: space-between; /* Distribute space evenly */
+  justify-content: space-between;
   height: 100%;
   width: 100%;
 }

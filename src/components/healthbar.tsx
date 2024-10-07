@@ -1,9 +1,16 @@
+'use client';
+
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../lib/store';
+
 interface HealthbarProps {
-    health: number;
     isPlaying: boolean;
 }
 
-const Healthbar: React.FC<HealthbarProps> = ({ health, isPlaying }) => {
+const Healthbar: React.FC<HealthbarProps> = ({ isPlaying }) => {
+
+    const health = useSelector((state: RootState) => state.health.value);
 
     const healthBarContainerStyle: React.CSSProperties = {
         height: '300px',
@@ -35,6 +42,7 @@ const Healthbar: React.FC<HealthbarProps> = ({ health, isPlaying }) => {
             </div>
         )
     }
+    return null;
 }
 
 export default Healthbar;
