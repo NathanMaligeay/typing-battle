@@ -32,6 +32,7 @@ const LoginRegisterForm: React.FC<LoginRegisterFormProps> = ({ onLogin, onRegist
           value={usernameLogin}
           onChange={(e) => setUsernameLogin(e.target.value)}
           required
+          autoComplete="off"
         />
         <input
           type="password"
@@ -40,6 +41,7 @@ const LoginRegisterForm: React.FC<LoginRegisterFormProps> = ({ onLogin, onRegist
           value={passwordLogin}
           onChange={(e) => setPasswordLogin(e.target.value)}
           required
+          autoComplete="off"
         />
         <button type="submit">Login</button>
       </form>
@@ -53,6 +55,7 @@ const LoginRegisterForm: React.FC<LoginRegisterFormProps> = ({ onLogin, onRegist
           value={usernameRegister}
           onChange={(e) => setUsernameRegister(e.target.value)}
           required
+          autoComplete="off"
         />
         <input
           type="password"
@@ -61,6 +64,7 @@ const LoginRegisterForm: React.FC<LoginRegisterFormProps> = ({ onLogin, onRegist
           value={passwordRegister}
           onChange={(e) => setPasswordRegister(e.target.value)}
           required
+          autoComplete="off"
         />
         <button type="submit">Register</button>
       </form>
