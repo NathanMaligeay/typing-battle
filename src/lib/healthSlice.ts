@@ -5,7 +5,7 @@ interface healthState {
 }
 
 const initialState: healthState = {
-    value: 100,
+    value: 1,
 };
 
 export const healthSlice = createSlice({
@@ -16,7 +16,7 @@ export const healthSlice = createSlice({
         state.value -= 1;
       },
       resetHealth: (state) => {
-        state.value = 100;
+        state.value = 1;
       }
     },
   });
