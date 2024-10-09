@@ -20,6 +20,7 @@ import Modal from '@/components/modal';
 import ExpandingBox from '@/components/expandingbox';
 import LoginRegisterForm from '@/components/loginregisterform';
 import GameOverBox from "@/components/gameoverbox";
+import GamesList from "@/components/gameslist";
 
 //custom hooks
 import { useWords } from '@/hooks/useWords';
@@ -45,6 +46,7 @@ const Main: React.FC = () => {
   }));
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showList, setShowList] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const wordsTyped = useRef<number>(0) as React.MutableRefObject<number>;
   const accuracy = useRef<number>(0) as React.MutableRefObject<number>;
@@ -130,7 +132,7 @@ const Main: React.FC = () => {
   useEffect(() => {
     const handleEndGame = async () => {
       try {
-        await sendEndGameInfo(username, wordsTyped.current, (accuracy.current / wordsTyped.current) * 100);
+        await sendEndGameInfo(username, wordsTyped.current, (accuracy.current / wordsTyped.current) * 100, score);
       } catch (error) {
         if (error instanceof Error) alert(`Error: ${error.message}`);
       }
@@ -141,12 +143,12 @@ const Main: React.FC = () => {
       }
       handleGameOver();
     }
-  }, [health, username, handleGameOver])
+  }, [health, username, handleGameOver, score])
 
-  const toggleModal = () => {
+  const toggleModal = useCallback(() => {
     setIsModalOpen((prev) => !prev);
     if (isPlaying && !isPaused) togglePause();
-  }
+  },[setIsModalOpen, isPlaying, isPaused, togglePause])
 
   const closeModal = () => setIsModalOpen(false);
 
@@ -188,12 +190,34 @@ const Main: React.FC = () => {
     }
   };
 
+  const closeShowList = useCallback(() => {
+    setShowList(false);
+    
+  }, [setShowList])
+
   const handleLogout = useCallback(() => {
     setIsLogin(false);
     setUsername(null);
-  }, [])
+    if (isModalOpen) toggleModal();
+    if (showList) closeShowList();
+    
+  }, [setIsLogin, setUsername, toggleModal, isModalOpen, closeShowList, showList])
 
-  console.log(time)
+  
+
+  const toggleShowList = useCallback(() => {
+    if (isPaused) {
+      setShowList((prev) => !prev);
+    }
+    else {
+      setShowList((prev) => !prev);
+      if (isPlaying) {
+      dispatch(togglePausing());
+      }
+    }
+    
+  },[setShowList,dispatch, isPaused, isPlaying])
+
 
   return (
     <div className='HUDbox'>
@@ -234,12 +258,15 @@ const Main: React.FC = () => {
           <Modal isOpen={isGameOver} onClose={closeGameOverModal}>
             <GameOverBox timePlayed={time} wordsTyped={wordsTyped.current} accuracy={accuracy.current} />
           </Modal>
+          <Modal isOpen={showList} onClose={closeShowList}>
+            <GamesList username={username}></GamesList>
+          </Modal>
         </div>
         <TextTypedBox isPlaying={isPlaying} textTyped={textTyped} highlightedWordText={highlightedWord?.text || ''} />
       </div>
       <div className='rightPanel'>
 
-        {isLogin ? <ExpandingBox username={username} handleLogout={handleLogout} /> : <button className='loginregisterbutton' onClick={toggleModal}>Login / Register</button>}
+        {isLogin ? <ExpandingBox username={username} handleLogout={handleLogout} toggleShowList={toggleShowList} /> : <button className='loginregisterbutton' onClick={toggleModal}>Login / Register</button>}
 
         <ScoreBox currentScore={score} highScore={hiScore} isPlaying={isPlaying} />
         <div className='verticalPanel'>

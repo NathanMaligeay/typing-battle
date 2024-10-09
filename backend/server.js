@@ -75,12 +75,13 @@ app.get('/games/user', async (req, res) => {
     if (!username) return res.status(400).send('User is required');
 
     try {
-        const result = await pool.query('SELECT COUNT(*) AS count, SUM(games.words_typed) AS total_words_typed, AVG(games.words_typed) as mean_words_typed, AVG(games.accuracy) as mean_accuracy FROM games JOIN users ON games.user_id = users.user_id WHERE users.username = $1', [username])
+        const result = await pool.query('SELECT COUNT(*) AS count, SUM(games.words_typed) AS total_words_typed, AVG(games.words_typed) as mean_words_typed, AVG(games.accuracy) as mean_accuracy, AVG(games.score) as mean_score FROM games JOIN users ON games.user_id = users.user_id WHERE users.username = $1', [username])
         const count = result.rows[0].count;
         const total_words_typed = result.rows[0].total_words_typed ? result.rows[0].total_words_typed : 0;
         const mean_words_typed = result.rows[0].mean_words_typed ? parseFloat(result.rows[0].mean_words_typed).toFixed(2) : 0;
         const mean_accuracy = result.rows[0].mean_accuracy ? parseFloat(result.rows[0].mean_accuracy).toFixed(2) : 0
-        return res.status(200).json({count, total_words_typed, mean_words_typed, mean_accuracy});
+        const mean_score = result.rows[0].mean_score ? parseFloat(result.rows[0].mean_score).toFixed(2) : 0
+        return res.status(200).json({count, total_words_typed, mean_words_typed, mean_accuracy, mean_score});
     } catch (error) {
         console.log(error);
         return res.status(500).json({ error: 'Internal server error' });
@@ -89,17 +90,31 @@ app.get('/games/user', async (req, res) => {
 
 //Route to post game info for a user
 app.post('/games/user', async (req, res) => {
-    const {username, wordsTyped, accuracy} = req.body;
-    console.log(accuracy)
+    const {username, wordsTyped, accuracy, score} = req.body;
     if (!username) return res.status(400).send('User is required');
     try {
         const result = await pool.query('SELECT user_id FROM users WHERE username = $1', [username]);
         const user_id = result.rows[0].user_id;
-        await pool.query('INSERT INTO games (user_id, words_typed, accuracy) VALUES ($1, $2, $3)', [user_id, wordsTyped, accuracy]);
+        await pool.query('INSERT INTO games (user_id, words_typed, accuracy, score) VALUES ($1, $2, $3, $4)', [user_id, wordsTyped, accuracy, score]);
         return res.json({message: 'Game info sucessfully posted'});
     } catch (error) {
         console.error('Error posting game info', error);
         res.status(500).send('Server error');
+    }
+})
+
+//Route to fetch all games info for a user 
+app.get('/games/all/user', async (req, res) => {
+    const {username} = req.query;
+
+    if (!username) return res.status(400).send('User is required');
+
+    try {
+        const result = await pool.query('SELECT game_id, words_typed, accuracy, score FROM games JOIN users ON games.user_id = users.user_id WHERE users.username = $1', [username])
+        return res.status(200).json(result.rows);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: 'Internal server error' });
     }
 })
 

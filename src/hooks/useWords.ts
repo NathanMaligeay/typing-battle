@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 
 const WORDS_ARRAY = [
-  "apple", "banana", "orange", "grape", "pineapple", "strawberry", "melon", "kiwi", "mango", "pear", 
+  "apple", "banana", "orange", "grape", "pineapple", "strawberry", "melon", "kiwi", "mango", "pear",
   "peach", "plum", "cherry", "lemon", "lime", "watermelon", "blueberry", "raspberry", "blackberry", "apricot",
   "cucumber", "carrot", "broccoli", "cauliflower", "spinach", "lettuce", "celery", "pepper", "onion", "tomato",
   "potato", "radish", "pumpkin", "beetroot", "zucchini", "squash", "cabbage", "peas", "asparagus", "corn",
@@ -38,11 +38,11 @@ export const useWords = (isPlaying: boolean, isPaused: boolean) => {
 
   const addWord = useCallback(() => {
     setWords(prevWords => [...prevWords, createWord()]);
-  }, []); 
+  }, []);
 
   const resetWordIntervalRef = useCallback(() => {
     addWordIntervalRef.current = 2000;
-  },[])
+  }, [])
 
   useEffect(() => {
     if (!isPlaying) {
@@ -52,12 +52,11 @@ export const useWords = (isPlaying: boolean, isPaused: boolean) => {
     const newHighlightedWord = words.reduce((lowest, word) =>
       word.y > lowest.y ? word : lowest, words[0] || { y: 0 });
 
-    if (!highlightedWord || !words.find(word => word.id === highlightedWord.id)) { 
+    if (!highlightedWord || !words.find(word => word.id === highlightedWord.id)) {
       setHighlightedWord(newHighlightedWord);
     }
   }, [words, highlightedWord, isPlaying, setHighlightedWord]);
-  // ### ici je comprend pas pq on a besoin de words pour que ça fonctionne qd on tape le mot (je comprends pr le cas où ça sort de l'écran)
-  
+
   useEffect(() => {
     if (!isPlaying) {
       setWords([]);
@@ -65,39 +64,40 @@ export const useWords = (isPlaying: boolean, isPaused: boolean) => {
     }
 
     if (isPaused) {
-      if (intervalRef.current) clearInterval(intervalRef.current);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
       return;
     }
-
-    //addWord(); //you can spam pause to generate words, but i dont want to remove the initial word generation, need to find a workaround
+    console.log("yo")
     intervalRef.current = setInterval(addWord, addWordIntervalRef.current);
 
     return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current); //### mais quel component ? car useWords est un hook =/= component?
+      if (intervalRef.current) clearInterval(intervalRef.current);
     }
-  }, [isPlaying, isPaused, addWord]);
+  }, [isPlaying, isPaused, addWord, addWordIntervalRef]);
 
   useEffect(() => {
-    let interval : NodeJS.Timeout | null;
-    if (isPlaying && intervalRef.current) {
+    let interval: NodeJS.Timeout | null;
+    if (isPlaying && !isPaused && intervalRef.current) {
       interval = setInterval(() => {
         if (addWordIntervalRef.current > 200) addWordIntervalRef.current = addWordIntervalRef.current - 100;
-      },30000)
+      }, 10000)
     }
     return () => {
       if (interval) clearInterval(interval);
     };
-  },[isPlaying])
+  }, [isPlaying, isPaused])
 
   const measureWordWidthWithCanvas = (word: string) => {
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
-  
+
     if (context) {
       context.font = "15px silkscreen";
       return context.measureText(word).width;
     }
-  
+
     return 0;
   };
 
@@ -106,7 +106,7 @@ export const useWords = (isPlaying: boolean, isPaused: boolean) => {
     return {
       id: Math.random().toString(36),
       text: text,
-      x: Math.max(Math.random()*5, Math.min(Math.floor(Math.random() * MAX_X_POSITION), MAX_X_POSITION - measureWordWidthWithCanvas(text)-Math.random()*5)),
+      x: Math.max(Math.random() * 5, Math.min(Math.floor(Math.random() * MAX_X_POSITION), MAX_X_POSITION - measureWordWidthWithCanvas(text) - Math.random() * 5)),
       y: 0,
       wordIsPaused: false,
     };
@@ -123,6 +123,8 @@ export const useWords = (isPlaying: boolean, isPaused: boolean) => {
     setWords(prevWords => prevWords.map(word =>
       word.id === id ? { ...word, y } : word
     )), [setWords]);
+
+  console.log("word interval ref " + addWordIntervalRef.current)
 
   return { words, highlightedWord, removeWord, updateWordPosition, setWords, resetWordIntervalRef };
 };
