@@ -1,25 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { generate } from 'random-words';
 
-const WORDS_ARRAY = [
-  "apple", "banana", "orange", "grape", "pineapple", "strawberry", "melon", "kiwi", "mango", "pear",
-  "peach", "plum", "cherry", "lemon", "lime", "watermelon", "blueberry", "raspberry", "blackberry", "apricot",
-  "cucumber", "carrot", "broccoli", "cauliflower", "spinach", "lettuce", "celery", "pepper", "onion", "tomato",
-  "potato", "radish", "pumpkin", "beetroot", "zucchini", "squash", "cabbage", "peas", "asparagus", "corn",
-  "pizza", "burger", "sandwich", "pasta", "spaghetti", "tacos", "burrito", "sushi", "noodles", "rice",
-  "steak", "chicken", "pork", "beef", "lamb", "duck", "shrimp", "lobster", "crab", "salmon",
-  "milk", "cheese", "butter", "yogurt", "cream", "dumbbell", "chocolate", "cake", "cookies", "donut",
-  "coffee", "tea", "juice", "water", "soda", "wine", "beer", "whiskey", "vodka", "rum",
-  "soccer", "basketball", "tennis", "golf", "cricket", "rugby", "hockey", "swimming", "running", "cycling",
-  "fast", "slow", "big", "small", "tall", "short", "wide", "narrow", "heavy", "light",
-  "blue", "red", "green", "yellow", "purple", "pink", "brown", "black", "white", "gray",
-  "sun", "moon", "stars", "cloud", "rain", "snow", "storm", "wind", "fog", "lightning",
-  "dog", "cat", "bird", "fish", "hamster", "rabbit", "horse", "cow", "sheep", "goat",
-  "train", "car", "bus", "bike", "plane", "boat", "subway", "truck", "motorcycle", "scooter",
-  "house", "apartment", "building", "school", "hospital", "church", "museum", "restaurant", "library", "store",
-  "pen", "pencil", "paper", "book", "notebook", "laptop", "phone", "tablet", "camera", "watch",
-  "chair", "table", "bed", "sofa", "desk", "shelf", "drawer", "cabinet", "lamp", "fan",
-  "happy", "sad", "angry", "excited", "bored", "tired", "nervous", "scared", "proud", "jealous"
-];
 const MAX_X_POSITION = 800;
 
 export interface Word {
@@ -34,14 +15,14 @@ export const useWords = (isPlaying: boolean, isPaused: boolean) => {
   const [words, setWords] = useState<Word[]>([]);
   const [highlightedWord, setHighlightedWord] = useState<Word | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const addWordIntervalRef = useRef<number>(2000);
+  const [addWordInterval, setAddWordInterval] = useState<number>(2000);
 
   const addWord = useCallback(() => {
     setWords(prevWords => [...prevWords, createWord()]);
   }, []);
 
   const resetWordIntervalRef = useCallback(() => {
-    addWordIntervalRef.current = 2000;
+    setAddWordInterval(2000);
   }, [])
 
   useEffect(() => {
@@ -52,10 +33,10 @@ export const useWords = (isPlaying: boolean, isPaused: boolean) => {
     const newHighlightedWord = words.reduce((lowest, word) =>
       word.y > lowest.y ? word : lowest, words[0] || { y: 0 });
 
-    if (!highlightedWord || !words.find(word => word.id === highlightedWord.id)) {
+    if (!highlightedWord ||  !words.find(word => word.id === highlightedWord.id)) {
       setHighlightedWord(newHighlightedWord);
     }
-  }, [words, highlightedWord, isPlaying, setHighlightedWord]);
+  }, [words, isPlaying, setHighlightedWord]);
 
   useEffect(() => {
     if (!isPlaying) {
@@ -69,25 +50,30 @@ export const useWords = (isPlaying: boolean, isPaused: boolean) => {
       }
       return;
     }
-    console.log("yo")
-    intervalRef.current = setInterval(addWord, addWordIntervalRef.current);
+    
+    const createInterval = () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      intervalRef.current = setInterval(addWord, addWordInterval);
+    }
+    
+    createInterval();
 
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     }
-  }, [isPlaying, isPaused, addWord, addWordIntervalRef]);
+  }, [isPlaying, isPaused, addWord, addWordInterval]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null;
     if (isPlaying && !isPaused && intervalRef.current) {
       interval = setInterval(() => {
-        if (addWordIntervalRef.current > 200) addWordIntervalRef.current = addWordIntervalRef.current - 100;
-      }, 10000)
+        if (addWordInterval > 200) setAddWordInterval((prev) => prev - 100);
+      }, 30000)
     }
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [isPlaying, isPaused])
+  }, [isPlaying, isPaused, intervalRef, addWordInterval])
 
   const measureWordWidthWithCanvas = (word: string) => {
     const canvas = document.createElement("canvas");
@@ -113,7 +99,7 @@ export const useWords = (isPlaying: boolean, isPaused: boolean) => {
   };
 
   const getRandomWord = (): string =>
-    WORDS_ARRAY[Math.floor(Math.random() * WORDS_ARRAY.length)];
+    generate({minLength: 3});
 
   const removeWord = useCallback((id: string) => {
     setWords(prevWords => prevWords.filter(word => word.id !== id));
@@ -124,7 +110,6 @@ export const useWords = (isPlaying: boolean, isPaused: boolean) => {
       word.id === id ? { ...word, y } : word
     )), [setWords]);
 
-  console.log("word interval ref " + addWordIntervalRef.current)
 
   return { words, highlightedWord, removeWord, updateWordPosition, setWords, resetWordIntervalRef };
 };

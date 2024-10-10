@@ -7,16 +7,16 @@ export const useAction = (setWords: (updater: (prevWords: Word[]) => Word[]) => 
     words: Word[],
     wordsTypedRef: React.MutableRefObject<number>
 ) => {
-    const freezeScoreRef = useRef<number>(0); //si j'utilise un usestate, ça ne fonctionne pas bien --> comprendre pq
+    const freezeScoreRef = useRef<number>(0);
     const nukeScoreRef = useRef<number>(0);
 
 
     const addScoreAction = useCallback(() => {
         if (freezeScoreRef.current < 100) {
-            freezeScoreRef.current = freezeScoreRef.current + 10;
+            freezeScoreRef.current = freezeScoreRef.current + 1;
         }
         if (nukeScoreRef.current < 100) {
-            nukeScoreRef.current = nukeScoreRef.current + 10;
+            nukeScoreRef.current = nukeScoreRef.current + 1.3;
         };
     }, [])
 
