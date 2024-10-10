@@ -1,8 +1,9 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This project is a small web game where you need to type words as fast as you can.
 
 ## Getting Started
 
-First, run the development server:
+First, run the development server in typing_battle directory:
 
 ```bash
 npm run dev
@@ -14,11 +15,18 @@ pnpm dev
 bun dev
 ```
 
+If you want to have a backend to take care of users info and keeping track of the scores you will need to launch the backend server:
+
+```bash
+cd backend
+npm run devStart
+```
+and create the postgresql database by using the ```create_database.sql``` file provided.
+
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
 ## Learn More
 

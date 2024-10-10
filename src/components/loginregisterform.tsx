@@ -3,9 +3,11 @@ import React, { useState } from 'react';
 interface LoginRegisterFormProps {
   onLogin: (username: string, password: string) => void;
   onRegister: (username: string, password: string) => void;
+  loginErrMessage: string;
+  registerErrMessage: string;
 }
 
-const LoginRegisterForm: React.FC<LoginRegisterFormProps> = ({ onLogin, onRegister }) => {
+const LoginRegisterForm: React.FC<LoginRegisterFormProps> = ({ onLogin, onRegister, loginErrMessage, registerErrMessage }) => {
   const [usernameLogin, setUsernameLogin] = useState('');
   const [passwordLogin, setPasswordLogin] = useState('');
   const [usernameRegister, setUsernameRegister] = useState('');
@@ -43,6 +45,7 @@ const LoginRegisterForm: React.FC<LoginRegisterFormProps> = ({ onLogin, onRegist
           required
           autoComplete="off"
         />
+        <div style={{marginBottom: '5px'}}>{loginErrMessage}</div>
         <button type="submit">Login</button>
       </form>
 
@@ -66,6 +69,7 @@ const LoginRegisterForm: React.FC<LoginRegisterFormProps> = ({ onLogin, onRegist
           required
           autoComplete="off"
         />
+        <div style={{marginBottom: '5px'}}>{registerErrMessage}</div>
         <button type="submit">Register</button>
       </form>
     </div>

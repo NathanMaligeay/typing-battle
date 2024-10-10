@@ -48,6 +48,8 @@ const Main: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showList, setShowList] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
+  const [loginErrMessage, setLoginErrMessage] = useState<string>('');
+  const [registerErrMessage, setRegisterErrMessage] = useState<string>('');
   const wordsTyped = useRef<number>(0) as React.MutableRefObject<number>;
   const accuracy = useRef<number>(0) as React.MutableRefObject<number>;
   const [time, setTime] = useState<number>(0);
@@ -79,6 +81,7 @@ const Main: React.FC = () => {
   const handleGameOver = useCallback(() => {
     dispatch(endGame());
     setTimerActive(false);
+    dispatch(resetHealth());
   }, [setTimerActive, dispatch])
 
   useEffect(() => {
@@ -130,7 +133,7 @@ const Main: React.FC = () => {
 
 
   useEffect(() => {
-    const handleEndGame = async () => {
+    const handleEndGameInfo = async () => {
       try {
         await sendEndGameInfo(username, wordsTyped.current, (accuracy.current / wordsTyped.current) * 100, score);
       } catch (error) {
@@ -139,7 +142,7 @@ const Main: React.FC = () => {
     }
     if (health === 0) {
       if (username) {
-        handleEndGame();
+        handleEndGameInfo();
       }
       handleGameOver();
     }
@@ -148,9 +151,14 @@ const Main: React.FC = () => {
   const toggleModal = useCallback(() => {
     setIsModalOpen((prev) => !prev);
     if (isPlaying && !isPaused) togglePause();
-  },[setIsModalOpen, isPlaying, isPaused, togglePause])
+    if (isGameOver) dispatch(endGameOver());
+  },[setIsModalOpen, isPlaying, isPaused, togglePause, dispatch, isGameOver])
 
-  const closeModal = () => setIsModalOpen(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setLoginErrMessage('');
+    setRegisterErrMessage('');
+  }
 
   const closeGameOverModal = () => {
     dispatch(endGameOver());
@@ -162,13 +170,13 @@ const Main: React.FC = () => {
       const response = await registerUser(username, password);
       const { registration, message, username: registeredUsername } = response;
       if (registration) {
-        alert(message);
         setIsLogin(true);
         setUsername(registeredUsername);
+        closeModal();
+        setRegisterErrMessage('');
       } else {
-        alert(message);
+        setRegisterErrMessage(message)
       }
-      closeModal();
     } catch (error) {
       if (error instanceof Error) alert(`Error: ${error.message}`);
     }
@@ -182,11 +190,13 @@ const Main: React.FC = () => {
         setIsLogin(true);
         setUsername(loggedInUsername);
         closeModal();
-      } else {
-        //add incorrect credentials message
+        setLoginErrMessage('');
+      }
+      else {
+        setLoginErrMessage("Incorrect credentials")
       }
     } catch (error) {
-      if (error instanceof Error) alert(`Error: ${error.message}`);
+      setLoginErrMessage("Incorrect credentials");
     }
   };
 
@@ -200,8 +210,9 @@ const Main: React.FC = () => {
     setUsername(null);
     if (isModalOpen) toggleModal();
     if (showList) closeShowList();
+    if (isGameOver) dispatch(endGameOver());
     
-  }, [setIsLogin, setUsername, toggleModal, isModalOpen, closeShowList, showList])
+  }, [setIsLogin, setUsername, toggleModal, isModalOpen, closeShowList, showList, dispatch, isGameOver])
 
   
 
@@ -210,13 +221,16 @@ const Main: React.FC = () => {
       setShowList((prev) => !prev);
     }
     else {
+      if (isGameOver) {
+        dispatch(endGameOver());
+      }
       setShowList((prev) => !prev);
       if (isPlaying) {
       dispatch(togglePausing());
       }
     }
     
-  },[setShowList,dispatch, isPaused, isPlaying])
+  },[setShowList,dispatch, isPaused, isPlaying, isGameOver])
 
 
   return (
@@ -253,7 +267,7 @@ const Main: React.FC = () => {
           ))}
           <img className='spaceBeagle' src='space_beaglev2.png'></img>
           <Modal isOpen={isModalOpen} onClose={closeModal}>
-            <LoginRegisterForm onLogin={handleLogin} onRegister={handleRegister} />
+            <LoginRegisterForm onLogin={handleLogin} onRegister={handleRegister} loginErrMessage={loginErrMessage} registerErrMessage={registerErrMessage} />
           </Modal>
           <Modal isOpen={isGameOver} onClose={closeGameOverModal}>
             <GameOverBox timePlayed={time} wordsTyped={wordsTyped.current} accuracy={accuracy.current} />
