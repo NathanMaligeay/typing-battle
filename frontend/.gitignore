@@ -37,3 +37,7 @@ next-env.d.ts
 
 #visual studio
 .vs/
+<<<<<<< HEAD
+=======
+
+>>>>>>> 25358cb7 (rewrote backend in .NET in directory /backend/csharp, move old into /backend/node)

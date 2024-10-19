@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 <<<<<<< HEAD:frontend/src/hooks/useAction.ts
+=======
+>>>>>>> 25358cb7 (rewrote backend in .NET in directory /backend/csharp, move old into /backend/node)
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Word } from './useWords';
 
@@ -72,6 +75,7 @@ export const useAction = (setWords: (updater: (prevWords: Word[]) => Word[]) => 
 
     return { freezeScoreRef, nukeScoreRef, addScoreAction, resetScoreAction };
 
+<<<<<<< HEAD
 =======
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Word } from './useWords';
@@ -147,4 +151,6 @@ export const useAction = (setWords: (updater: (prevWords: Word[]) => Word[]) => 
     return { freezeScoreRef, nukeScoreRef, addScoreAction, resetScoreAction };
 
 >>>>>>> dbf1b4fb (cleaned code, corrected bug, lgtm):src/hooks/useAction.ts
+=======
+>>>>>>> 25358cb7 (rewrote backend in .NET in directory /backend/csharp, move old into /backend/node)
 }

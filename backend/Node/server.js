@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <<<<<<< HEAD:backend/Node/server.js
 const express = require('express');
 const bcrypt = require('bcrypt');
@@ -141,6 +142,8 @@ app.listen(PORT, () => {
 
 
 =======
+=======
+>>>>>>> 25358cb7 (rewrote backend in .NET in directory /backend/csharp, move old into /backend/node)
 const express = require('express');
 const bcrypt = require('bcrypt');
 const pool = require('./db'); // Import the database connection
@@ -267,4 +270,7 @@ app.listen(PORT, () => {
 });
 
 
+<<<<<<< HEAD
 >>>>>>> 9ceb53ed (added games list fetching + some UI fix, bug discovery with useWords intervalRef todo):backend/server.js
+=======
+>>>>>>> 25358cb7 (rewrote backend in .NET in directory /backend/csharp, move old into /backend/node)

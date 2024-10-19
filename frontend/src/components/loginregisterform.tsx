@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 <<<<<<< HEAD:frontend/src/components/loginregisterform.tsx
+=======
+>>>>>>> 25358cb7 (rewrote backend in .NET in directory /backend/csharp, move old into /backend/node)
 import React, { useState } from 'react';
 
 interface LoginRegisterFormProps {
@@ -78,6 +81,7 @@ const LoginRegisterForm: React.FC<LoginRegisterFormProps> = ({ onLogin, onRegist
 };
 
 export default LoginRegisterForm;
+<<<<<<< HEAD
 =======
 import React, { useState } from 'react';
 
@@ -155,3 +159,5 @@ const LoginRegisterForm: React.FC<LoginRegisterFormProps> = ({ onLogin, onRegist
 
 export default LoginRegisterForm;
 >>>>>>> 9ceb53ed (added games list fetching + some UI fix, bug discovery with useWords intervalRef todo):src/components/loginregisterform.tsx
+=======
+>>>>>>> 25358cb7 (rewrote backend in .NET in directory /backend/csharp, move old into /backend/node)

@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 <<<<<<< HEAD:backend/Node/request.rest
+=======
+>>>>>>> 25358cb7 (rewrote backend in .NET in directory /backend/csharp, move old into /backend/node)
 GET http://localhost:8080/games/all/user?username=Nathan
 
 ###
@@ -19,6 +22,7 @@ Content-Type: application/json
  {
     "username" : "Nathan",
     "password": "password"
+<<<<<<< HEAD
 =======
 GET http://localhost:8080/games/all/user?username=Nathan
 
@@ -41,4 +45,6 @@ Content-Type: application/json
     "username" : "Nathan",
     "password": "password"
 >>>>>>> 9ceb53ed (added games list fetching + some UI fix, bug discovery with useWords intervalRef todo):backend/request.rest
+=======
+>>>>>>> 25358cb7 (rewrote backend in .NET in directory /backend/csharp, move old into /backend/node)
  }
