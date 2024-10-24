@@ -15,6 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e4c0740d950328c4e1edc8c51ba7265540efb29e")]
 =======
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+261d707ba9c969c708130e57ccb165d7dfc43a0c")]
@@ -22,6 +23,9 @@ using System.Reflection;
 =======
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e4c0740d950328c4e1edc8c51ba7265540efb29e")]
 >>>>>>> f76f6f66 (b)
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+12a4d990fda8c8994e25be685f87210614ecbcc0")]
+>>>>>>> b5437bef (c)
 [assembly: System.Reflection.AssemblyProductAttribute("csharp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("csharp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
