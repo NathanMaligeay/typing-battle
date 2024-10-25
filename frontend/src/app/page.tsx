@@ -72,9 +72,10 @@ const Main: React.FC = () => {
     resetWordIntervalRef();
     setTime(0);
     wordsTyped.current = 0;
-    accuracy.current = 0;
+    accuracy.current = 0.00;
     setTimerActive(true);
     closeModal();
+    closeShowList();
   }, [resetTextTyped, resetScore, resetScoreAction, resetWordIntervalRef, setTimerActive, dispatch])
 
 
@@ -105,6 +106,8 @@ const Main: React.FC = () => {
 
   const togglePause = useCallback(() => {
     dispatch(togglePausing());
+    closeShowList();
+    closeModal();
     setTimerActive((prev) => !prev);
   },[dispatch, setTimerActive])
 
@@ -135,7 +138,7 @@ const Main: React.FC = () => {
   useEffect(() => {
     const handleEndGameInfo = async () => {
       try {
-        await sendEndGameInfo(username, wordsTyped.current, (accuracy.current / wordsTyped.current) * 100, score);
+        await sendEndGameInfo(username, wordsTyped.current, parseFloat(((accuracy.current / wordsTyped.current) * 100).toFixed(2)), score);
       } catch (error) {
         if (error instanceof Error) alert(`Error: ${error.message}`);
       }
@@ -178,7 +181,13 @@ const Main: React.FC = () => {
         setRegisterErrMessage('Registration failed. Please try again.')
       }
     } catch (error) {
-      if (error instanceof Error) alert(`Error: ${error.message}`);
+      if (error instanceof Error) {
+        const jsonString = error.message.replace(/^Error: /, '');
+        const errors = JSON.parse(jsonString);
+        const errMessage = errors.map(e => e.description).join('\n');
+        console.log(errMessage)
+        setRegisterErrMessage(errMessage);
+      };
     }
   };
 

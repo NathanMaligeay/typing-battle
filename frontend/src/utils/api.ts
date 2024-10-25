@@ -1,5 +1,5 @@
 // utils/api.ts
-const BASE_URL = 'http://localhost:5105/api';
+const BASE_URL = 'http://localhost:5000/api';
 
 export const registerUser = async (username: string, password: string) => {
   const response = await fetch(`${BASE_URL}/account/register`, {
