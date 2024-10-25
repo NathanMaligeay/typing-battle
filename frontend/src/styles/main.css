@@ -1,0 +1,386 @@
+@font-face {
+  font-family: 'silkscreen';
+  src: url('../fonts/slkscr.ttf') format('truetype'),
+}
+
+
+html {
+  background-image: url('../../public/galaxy_background.png');
+  background-size: cover;
+  background-position: unset;
+}
+
+button:hover {
+  background-color: yellow;
+  color: black;
+  cursor: pointer;
+}
+
+.word {
+  font-family: 'silkscreen';
+}
+
+.HUDbox {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+.leftPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.pauseDiv {
+  display: flex;
+  position: absolute;
+  background-color: rgba(20, 1, 31, 0.986);
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+}
+
+.playButton {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-family: 'silkscreen';
+  font-size: 30px;
+  height: 50px;
+  width: 150px;
+  margin: auto;
+  overflow: hidden;
+  border: solid yellow 5px;
+  border-radius: 10px;
+  background-color: rgb(8, 0, 12);
+  color: yellow;
+  transform: translateX(-75px);
+  z-index: 999;
+}
+
+.rightPanelButton {
+  font-family: 'silkscreen';
+  font-size: 30px;
+  height: 50px;
+  width: 100%;
+  margin-top: 60px;
+  overflow: hidden;
+  border: solid yellow 5px;
+  border-radius: 10px;
+  background-color: rgb(8, 0, 12);
+  color: yellow;
+}
+
+.logoutButton {
+  border: solid yellow 3px;
+  border-radius: 5px;
+  background-color: rgb(8, 0, 12);
+  color: yellow;
+  font-family: 'silkscreen';
+  font-size: 15px;
+
+}
+
+.resumeButton {
+  font-family: 'silkscreen';
+  font-size: 30px;
+  height: 50px;
+  width: 250px;
+  margin: auto;
+  overflow: hidden;
+  border: solid yellow 5px;
+  border-radius: 10px;
+  background-color: rgb(8, 0, 12);
+  color: yellow;
+}
+
+.playBox {
+  border-radius: 10px;
+  border: solid yellow 5px;
+  background-color: rgb(19, 3, 26);
+  height: 800px;
+  width: 800px;
+  position: relative;
+}
+
+.rightPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 300px;
+  height: 100%;
+}
+
+.scoreBox {
+  width: 100%;
+  height: 50px;
+  border: 5px solid yellow;
+  border-radius: 10px;
+  font-family: 'silkscreen';
+  color: yellow;
+  background-color: rgb(19, 3, 26);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.verticalPanel {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  width: 100%;
+  margin-top: 20px;
+  justify-content: space-between;
+}
+
+.inputTextDiv {
+  width: 800px;
+  height: 50px;
+  color: yellow;
+  background-color: rgb(19, 3, 26);
+  border: solid 5px yellow;
+  border-radius: 10px;
+  font-family: 'silkscreen';
+  align-content: center;
+  text-align: center;
+  font-size: 30px;
+}
+
+.spaceBeagle {
+  width: 800px;
+  overflow: hidden;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.meteor-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.meteor {
+  position: absolute;
+  transform: translateY(-50%);
+}
+
+.loginregisterbutton {
+  font-family: 'silkscreen';
+  font-size: 15px;
+  height: 50px;
+  width: 100%;
+  overflow: hidden;
+  border: 5px solid yellow;
+  border-radius: 10px;
+  background-color: rgb(19, 3, 26);
+  color: yellow;
+}
+
+.xButton {
+  background-color: rgb(8, 0, 12);
+  color: yellow;
+  font-family: 'silkscreen';
+  border: none;
+  width: fit-content;
+  border-radius: 0px 4px 0px 5px
+}
+
+.modal {
+  position: relative;
+  width: fit-content;
+  margin: auto;
+  margin-top: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(8, 0, 12);
+  border: solid yellow 5px;
+  border-radius: 10px;
+  z-index: 1000;
+}
+
+.loginregister {
+  font-family: 'silkscreen';
+  font-size: 15px;
+  color: yellow;
+  width: 350px;
+  padding: 5px;
+}
+
+input[type="text"],
+input[type="password"],
+textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 4px;
+  box-sizing: border-box;
+  /* Include padding and border in element's total width and height */
+  margin-bottom: 15px;
+  /* Add space between fields */
+  color: yellow;
+  background-color: rgb(8, 0, 12);
+  border: yellow solid 3px;
+  font-family: 'silkscreen';
+}
+
+button[type="submit"] {
+  font-family: 'silkscreen';
+  font-size: 20px;
+  height: 40px;
+  width: 150px;
+  overflow: hidden;
+  border: solid yellow 3px;
+  border-radius: 10px;
+  background-color: rgb(8, 0, 12);
+  color: yellow;
+}
+
+button[type="submit"]:hover {
+  background-color: yellow;
+  color: black;
+  cursor: pointer;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.box {
+  width: 100%;
+  height: 50px;
+  background-color: rgb(19, 3, 26);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: yellow;
+  font-family: 'silkscreen';
+  cursor: pointer;
+  transition: width 0.5s ease, height 0.5s ease;
+  border: 5px solid yellow;
+  border-radius: 10px;
+  text-align: center;
+  user-select: none;
+  font-size: 18px;
+  box-sizing: border-box;
+}
+
+.expandedbox {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+}
+
+.expandedbox>div {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0;
+  /* Optional for spacing between text and container */
+}
+
+.expandedbox>div:last-child {
+  margin-top: auto;
+  /* Push this element to the bottom */
+  display: flex;
+  justify-content: space-around;
+  padding-bottom: 5px;
+  /* Adjust bottom spacing if needed */
+}
+
+.box:hover {
+  cursor: pointer;
+}
+
+.box.expanded {
+  width: 100%;
+  height: 360px;
+}
+
+.gameoverbox {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-content: center;
+  padding: 20px;
+  color: yellow;
+  font-family: 'silkscreen';
+  font-size: 20px;
+}
+
+table {
+  border-collapse: collapse;
+  /* Pour fusionner les bordures adjacentes */
+  margin-top: 5px;
+  margin-right: 5px;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  /* Bordure autour des cellules */
+  text-align: left;
+  /* Alignement du texte */
+}
+
+th {
+  background-color: #2e0049;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background-color: #2e0049;
+  /* Couleur différente pour les lignes paires */
+}
+
+table tr:hover td {
+  background-color: yellow;
+  color: black;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  /* Width of the scrollbar */
+  color: yellow;
+
+}
+
+::-webkit-scrollbar-track {
+  background-clip: content-box;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  padding-right: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: yellow;
+  /* Color of the scroll thumb */
+  border-radius: 10px;
+  /* Rounded corners */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: yellow;
+  /* Color on hover */
+}
+
+::-webkit-scrollbar-corner,
+::-webkit-scrollbar-track {
+  background-color: #e6e6e6;
+}
