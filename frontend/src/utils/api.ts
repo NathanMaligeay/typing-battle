@@ -1,5 +1,5 @@
 // utils/api.ts
-const BASE_URL = 'https://csharp.fly.dev';
+const BASE_URL = 'https://csharp.fly.dev/api';
 
 export const registerUser = async (username: string, password: string) => {
   const response = await fetch(`${BASE_URL}/account/register`, {
