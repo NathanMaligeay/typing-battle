@@ -183,7 +183,7 @@ const Main: React.FC = () => {
     } catch (error) {
       if (error instanceof Error) {
         const jsonString = error.message.replace(/^Error: /, '');
-        const errors = JSON.parse(jsonString);
+        const errors = JSON.parse(jsonString) as { code: string; description: string }[];;
         const errMessage = errors.map(e => e.description).join('\n');
         console.log(errMessage)
         setRegisterErrMessage(errMessage);
