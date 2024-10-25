@@ -30,9 +30,9 @@ builder.Services.AddScoped<IGameRepository, GameRepository>();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowSpecificOrigins", policy =>
+    options.AddPolicy("AllowVercel", policy =>
     {
-        policy.WithOrigins("http://localhost:3000") 
+        policy.WithOrigins("https://typing-battle-45gtjnlvn-nathan-maligeays-projects.vercel.app") 
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -50,7 +50,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors("AllowSpecificOrigins");
+app.UseCors("AllowVercel");
 
 app.UseAuthorization();
 
