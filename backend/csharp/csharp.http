@@ -1,4 +1,4 @@
-@csharp_HostAddress = http://localhost:5000
+@csharp_HostAddress = https://csharp.fly.dev/
 
 GET {{csharp_HostAddress}}/api/
 Accept: application/json
