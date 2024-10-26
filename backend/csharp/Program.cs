@@ -32,7 +32,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowVercel", policy =>
     {
-        policy.WithOrigins("https://typing-battle-45gtjnlvn-nathan-maligeays-projects.vercel.app") 
+        policy.WithOrigins("https://typing-battle-eight.vercel.app/") 
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
