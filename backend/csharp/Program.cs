@@ -10,11 +10,12 @@ using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Configuration.AddEnvironmentVariables();
 
+var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
 
 builder.Services.AddDbContext<ApplicationDBContext>(options => {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseNpgsql(connectionString);
 });
 
 builder.Services.AddIdentity<AppUser, IdentityRole>(options => {
@@ -39,7 +40,6 @@ builder.Services.AddCors(options =>
     });
 });
 
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -47,6 +47,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
 var app = builder.Build();
+
+Console.WriteLine(Environment.GetEnvironmentVariable("DATABASE_URL"));
+Console.WriteLine(builder.Configuration.GetSection("ConnectionString:DefaultConnection").Value);
 
 app.UseSwagger();
 app.UseSwaggerUI();
