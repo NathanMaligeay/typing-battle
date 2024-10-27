@@ -20,11 +20,3 @@ primary_region = 'cdg'
   memory = '1gb'
   cpu_kind = 'shared'
   cpus = 1
-
-[[services]]
-  internal_port = 5432 # Postgres instance
-  protocol = "tcp"
-
-[[services.ports]]
-  handlers = ["pg_tls"]
-  port = 5432
