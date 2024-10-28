@@ -6,9 +6,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.HttpOverrides;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
+using Npgsql;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+var dsBuilder = new NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("DATABASE_URL"));
+var dbDataSource = dsBuilder.Build();
 
 builder.Configuration.AddEnvironmentVariables();
 
@@ -16,7 +20,7 @@ var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
 Console.WriteLine(connectionString);
 
 builder.Services.AddDbContext<ApplicationDBContext>(options => {
-    options.UseNpgsql(connectionString);
+    options.UseNpgsql(dbDataSource);
 });
 
 builder.Services.AddIdentity<AppUser, IdentityRole>(options => {
@@ -49,8 +53,8 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
-Console.WriteLine(Environment.GetEnvironmentVariable("DATABASE_URL"));
-Console.WriteLine(builder.Configuration.GetSection("ConnectionString:DefaultConnection").Value);
+//Console.WriteLine(Environment.GetEnvironmentVariable("DATABASE_URL"));
+//Console.WriteLine(builder.Configuration.GetSection("ConnectionString:DefaultConnection").Value);
 
 app.UseSwagger();
 app.UseSwaggerUI();
