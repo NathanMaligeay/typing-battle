@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvironmentVariables();
 
-var connectionString = Environment.GetEnvironmentVariable("%DATABASE_URL%");
+var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
 Console.WriteLine(connectionString);
 
 builder.Services.AddDbContext<ApplicationDBContext>(options => {
