@@ -147,3 +147,5 @@ C:\_repositories\typing-battle\backend\csharp\obj\Debug\net8.0\csharp.pdb
 C:\_repositories\typing-battle\backend\csharp\obj\Debug\net8.0\csharp.genruntimeconfig.cache
 C:\_repositories\typing-battle\backend\csharp\obj\Debug\net8.0\ref\csharp.dll
 C:\_repositories\typing-battle\backend\csharp\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\_repositories\typing-battle\backend\csharp\bin\Debug\net8.0\Npgsql.dll
+C:\_repositories\typing-battle\backend\csharp\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
