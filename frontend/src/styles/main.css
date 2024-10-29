@@ -16,6 +16,16 @@ button:hover {
   cursor: pointer;
 }
 
+.fa_button {
+  background-color: transparent;
+  border-style: hidden;
+}
+
+.fa_button:hover {
+  background-color: transparent;
+  color: yellow;
+}
+
 .word {
   font-family: 'silkscreen';
 }
@@ -104,6 +114,14 @@ button:hover {
   background-color: rgb(19, 3, 26);
   height: 800px;
   width: 800px;
+  position: relative;
+}
+
+.introtext {
+  font-family: 'silkscreen';
+  color: yellow;
+  font-size: 20px;
+  padding: 5px;
   position: relative;
 }
 
@@ -352,6 +370,11 @@ tr:nth-child(even) {
 table tr:hover td {
   background-color: yellow;
   color: black;
+}
+
+.no-hover tr:hover td {
+  background-color: transparent !important;
+  color: inherit !important;
 }
 
 ::-webkit-scrollbar {

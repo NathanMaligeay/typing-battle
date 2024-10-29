@@ -1,5 +1,5 @@
 // utils/api.ts
-const BASE_URL = 'https://csharp20241028143915.azurewebsites.net/api';
+const BASE_URL = 'https://localhost:8080/api';
 
 export const registerUser = async (username: string, password: string) => {
   const response = await fetch(`${BASE_URL}/account/register`, {
@@ -81,5 +81,26 @@ export const getAllGames = async (username: string | null) => {
     return data;
   } catch (error) {
     if (error instanceof Error) throw new Error(`Failed to fetch all games: ${error.message}`);
+  }
+}
+
+export const getLeaderboard = async () => {
+  try {
+    
+    const response = await fetch(`${BASE_URL}/game`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText);
+    }
+
+    const data = await response.json();
+    return data;
+
+  } catch (error) {
+    if (error instanceof Error) throw new Error(`Failed to fetch leaderboard: ${error.message}`);
   }
 }

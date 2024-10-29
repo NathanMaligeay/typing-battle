@@ -5,9 +5,10 @@ interface ExpandingBoxProps {
     username: string | null;
     handleLogout: () => void;
     toggleShowList: () => void;
+    closeIntro: () => void;
 }
 
-const ExpandingBox: React.FC<ExpandingBoxProps> = ({username, handleLogout, toggleShowList}) => {
+const ExpandingBox: React.FC<ExpandingBoxProps> = ({username, handleLogout, toggleShowList, closeIntro}) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [gameCount, setGameCount] = useState<number | null>(null);
   const [totalWordsTyped, setTotalWordsTyped] = useState<number | null>(0);
@@ -57,6 +58,7 @@ const ExpandingBox: React.FC<ExpandingBoxProps> = ({username, handleLogout, togg
           <button onClick={(event) => {
             event.stopPropagation();
             toggleShowList();
+            closeIntro();
           }} className="logoutButton">View games</button>
         </div>
         </div> 

@@ -13,9 +13,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddEnvironmentVariables();
 
 //var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
+//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 //Console.WriteLine(connectionString);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+Console.WriteLine(connectionString);
 
 builder.Services.AddDbContext<ApplicationDBContext>(options => {
     options.UseNpgsql(connectionString)
@@ -38,7 +40,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowVercel", policy =>
     {
-        policy.WithOrigins("https://typing-battle-eight.vercel.app")
+        policy.WithOrigins("https://typing-battle-eight.vercel.app",
+            "http://localhost:3000")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -47,14 +50,12 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-
 builder.Services.AddControllers();
 
 var app = builder.Build();
 
 //Console.WriteLine(Environment.GetEnvironmentVariable("DATABASE_URL"));
-//Console.WriteLine(builder.Configuration.GetSection("ConnectionString:DefaultConnection").Value);
+//Console.WriteLine(builder.Configuration.GetValue<string>("DATABASE_URL"));
 
 app.UseSwagger();
 app.UseSwaggerUI();

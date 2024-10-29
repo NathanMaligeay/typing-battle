@@ -71,5 +71,28 @@ namespace csharp.Repositories
 
             return gameStats;
         }
+        public async Task<List<LeaderboardGameDTO>> GetLeaderboard()
+        {
+            var leaderboard = await _context.Games
+                .OrderByDescending(g => g.Score)
+                .Take(3)
+                .Join(_context.Users,                    
+                    game => game.AppUserId,           
+                    user => user.Id,
+                    (game, user) => new LeaderboardGameDTO
+                        {
+                            Id = game.Id,
+                            Username = user.UserName,
+                            Score = game.Score,
+                            WordsTyped = game.WordsTyped,
+                            Accuracy = game.Accuracy,
+                            CreatedOn = game.CreatedOn,
+                            
+                         })
+                 .ToListAsync();
+
+            return leaderboard;
+
+        }
     }
 }

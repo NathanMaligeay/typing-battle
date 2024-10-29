@@ -44,7 +44,7 @@ namespace csharp.Controllers
 
             Console.WriteLine($"Username: {username}");
             Console.WriteLine($"Game Data: {JsonConvert.SerializeObject(gameDTO)}");
-            
+
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var appUser = await _userManager.FindByNameAsync(username);
@@ -52,7 +52,7 @@ namespace csharp.Controllers
             var gameModel = gameDTO.ToGameFromCreate(username);
             gameModel.AppUserId = appUser.Id;
             await _gameRepository.CreateAsync(gameModel);
-            return CreatedAtAction(nameof(GetById), new {id = gameModel.Id}, gameModel.ToGameDTO());
+            return CreatedAtAction(nameof(GetById), new { id = gameModel.Id }, gameModel.ToGameDTO());
         }
 
         [HttpGet("username")]
@@ -77,16 +77,28 @@ namespace csharp.Controllers
         public async Task<IActionResult> GetUserStats([FromQuery] string username)
         {
             if (string.IsNullOrWhiteSpace(username)) return BadRequest("Username is required");
-            
+
             try
             {
                 var stats = await _gameRepository.GetGameStatisticsAsync(username);
                 return Ok(stats);
             } catch (Exception e)
             {
-                return StatusCode(500,$"Internal server error: {e.Message}");
+                return StatusCode(500, $"Internal server error: {e.Message}");
             }
         }
-
+        [HttpGet]
+        public async Task<IActionResult> GetLeaderboard()
+        {
+            try
+            {
+                var leaderboard = await _gameRepository.GetLeaderboard();
+                return Ok(leaderboard);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, $"Internal server error: {e.Message}");
+            }
+        }
     }
 }

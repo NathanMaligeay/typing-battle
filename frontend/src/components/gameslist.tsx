@@ -29,7 +29,6 @@ const GamesList: React.FC<GamesListProps> = ({ username }) => {
     };
 
 
-
     const thStyle: React.CSSProperties = {
         position: 'sticky',   // Make the <th> sticky
         top: 0,               // Stick to the top of the container
@@ -50,7 +49,6 @@ const GamesList: React.FC<GamesListProps> = ({ username }) => {
         const fetchGames = async () => {
             try {
                 const games = await getAllGames(username);
-                console.log(games);
                 const gamesWithDate = games.map((game: { createdOn: string | number | Date; }) => ({
                     ...game,
                     createdOn: new Date(game.createdOn), // Convert createdOn to Date

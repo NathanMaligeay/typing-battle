@@ -14,5 +14,6 @@ namespace csharp.Interfaces
         Task<List<Game>> GetAllAsync(string username);
         Task<Game> GetByIdAsync(int id);
         Task<GameStatsDTO> GetGameStatisticsAsync(string username);
+        Task<List<LeaderboardGameDTO>> GetLeaderboard();
     }
 }
