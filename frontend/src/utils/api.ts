@@ -1,5 +1,5 @@
 // utils/api.ts
-const BASE_URL = 'https://localhost:8080/api';
+const BASE_URL = 'https://csharp20241028143915.azurewebsites.net/api';
 
 export const registerUser = async (username: string, password: string) => {
   const response = await fetch(`${BASE_URL}/account/register`, {
