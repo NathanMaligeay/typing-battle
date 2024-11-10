@@ -42,7 +42,7 @@ const Leaderboard: React.FC = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading games...</div>;
+    return <div style={{color: "yellow", fontFamily: "silkscreen", fontSize: "14px"}}>Retrieving highscore from server...</div>;
   }
 
   const divStyle: React.CSSProperties = {
